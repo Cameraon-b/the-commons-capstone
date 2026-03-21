@@ -7,3 +7,6 @@ This is the repository for my Capstone Project. A web app called The Commons tha
 
 ## Status
 Initial design phase complete. folder structures built. connected to GitHub repository.
+
+## docs/
+The docs/ folder contains design materials like wireframes and diagrams
