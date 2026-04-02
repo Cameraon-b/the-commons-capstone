@@ -1,0 +1,33 @@
+{
+  "name": "the-commons-capstone",
+  "version": "1.0.0",
+  "description": "This is the repository for my Capstone Project. A web app called The Commons that empowers local communities through tool and skill sharing.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon src/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Cameraon-b/the-commons-capstone.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Cameraon-b/the-commons-capstone/issues"
+  },
+  "homepage": "https://github.com/Cameraon-b/the-commons-capstone#readme",
+  "dependencies": {
+    "dotenv": "^17.4.0",
+    "ejs": "^5.0.1",
+    "express": "^5.2.1",
+    "pg": "^8.20.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}

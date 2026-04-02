@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Listings</title>
+</head>
+<body>
+  <h1>Listings</h1>
+
+  <ul>
+    <% listings.forEach(listing => { %>
+      <li>
+        <strong><%= listing.title %></strong> - <%= listing.description %>
+        </li>
+    <% }) %>
+  </ul>
+
+  <a href="/">Back to Home</a>
+</body>
+</html>
