@@ -6,11 +6,20 @@
 <body>
   <h1>Listings</h1>
 
+  <a href="/listings/create">Create New Listing</a>
+  <br /><br />
+
   <ul>
     <% listings.forEach(listing => { %>
       <li>
-        <strong><%= listing.title %></strong> - <%= listing.description %>
-        </li>
+        <a href="/listings/<%= listing.listing_id %>"><strong><%= listing.title %></strong></a> - <%= listing.description %><br />
+        Type: <%= listing.type %> |
+        Category: <%= listing.category %> |
+        Availability: <%= listing.availability %> |
+        Zip: <%= listing.zip_code %> |
+        Status: <%= listing.status %>
+      </li>
+      <br />
     <% }) %>
   </ul>
 

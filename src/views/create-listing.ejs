@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Create Listing</title>
+</head>
+<body>
+  <h1>Create a Listing</h1>
+
+  <form action="/listings" method="POST">
+    <div>
+      <label for="title">Title:</label><br />
+      <input type="text" id="title" name="title" required />
+    </div>
+
+    <br />
+
+    <div>
+      <label for="description">Description:</label><br />
+      <textarea id="description" name="description" rows="4" cols="40" required></textarea>
+    </div>
+
+    <br />
+
+    <div>
+      <label for="type">Type:</label><br />
+      <select id="type" name="type" required>
+        <option value="tool">Tool</option>
+        <option value="skill">Skill</option>
+      </select>
+    </div>
+
+    <br />
+
+    <div>
+      <label for="category">Category:</label><br />
+      <input type="text" id="category" name="category" required />
+    </div>
+
+    <br />
+
+    <div>
+      <label for="availability">Availability:</label><br />
+      <input type="text" id="availability" name="availability" placeholder="Weekends, evenings, etc." required />
+    </div>
+
+    <br />
+
+    <div>
+      <label for="zip_code">Zip Code:</label><br />
+      <input type="text" id="zip_code" name="zip_code" required />
+    </div>
+
+    <br />
+
+    <button type="submit">Create Listing</button>
+  </form>
+
+  <br />
+  <a href="/listings">Back to Listings</a>
+</body>
+</html>

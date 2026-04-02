@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= listing.title %></title>
+</head>
+<body>
+  <h1><%= listing.title %></h1>
+
+  <p><strong>Description:</strong> <%= listing.description %></p>
+  <p><strong>Type:</strong> <%= listing.type %></p>
+  <p><strong>Category:</strong> <%= listing.category %></p>
+  <p><strong>Availability:</strong> <%= listing.availability %></p>
+  <p><strong>Zip Code:</strong> <%= listing.zip_code %></p>
+  <p><strong>Status:</strong> <%= listing.status %></p>
+  <p><strong>Created:</strong> <%= listing.created_at %></p>
+
+  <hr />
+
+  <h2>Request This Listing</h2>
+
+  <form action="/listings/<%= listing.listing_id %>/request" method="POST">
+    <div>
+      <label for="request_message">Message:</label><br />
+      <textarea id="request_message" name="request_message" rows="4" cols="40" required></textarea>
+    </div>
+
+    <br />
+
+    <div>
+      <label for="contact_method">Preferred Contact Method:</label><br />
+      <select id="contact_method" name="contact_method" required>
+        <option value="text">Text</option>
+        <option value="email">Email</option>
+        <option value="phone">Phone</option>
+      </select>
+    </div>
+
+    <br />
+
+    <div>
+      <label for="contact_value">Contact Info:</label><br />
+      <input type="text" id="contact_value" name="contact_value" required />
+    </div>
+
+    <br />
+
+    <button type="submit">Send Request</button>
+  </form>
+
+  <br />
+  <a href="/listings">Back to Listings</a>
+</body>
+</html>
