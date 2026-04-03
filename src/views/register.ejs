@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Register</title>
+</head>
+<body>
+  <h1>Create Account</h1>
+
+  <form action="/users/register" method="POST">
+    <div>
+      <label for="name">Name:</label><br />
+      <input type="text" id="name" name="name" required />
+    </div>
+
+    <br />
+
+    <div>
+      <label for="email">Email:</label><br />
+      <input type="email" id="email" name="email" required />
+    </div>
+
+    <br />
+
+    <div>
+      <label for="password">Password:</label><br />
+      <input type="password" id="password" name="password" required />
+    </div>
+
+    <br />
+
+    <div>
+      <label for="bio">Bio:</label><br />
+      <textarea id="bio" name="bio" rows="4" cols="40"></textarea>
+    </div>
+
+    <br />
+
+    <div>
+      <label for="zip_code">Zip Code:</label><br />
+      <input type="text" id="zip_code" name="zip_code" />
+    </div>
+
+    <br />
+
+    <button type="submit">Create Account</button>
+  </form>
+
+  <br />
+  <a href="/">Back Home</a>
+</body>
+</html>

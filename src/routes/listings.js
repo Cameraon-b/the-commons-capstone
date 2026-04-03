@@ -5,7 +5,13 @@ const pool = require('../config/db');
 // GET /listings
 router.get('/', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM listings ORDER BY created_at DESC');
+    const result = await pool.query(`
+      SELECT listings.*, users.name
+      FROM listings
+      JOIN users ON listings.user_id = users.user_id
+      ORDER BY listings.created_at DESC
+    `);
+
     res.render('listings', { listings: result.rows });
   } catch (err) {
     console.error(err);
@@ -15,6 +21,13 @@ router.get('/', async (req, res) => {
 
 // GET /listings/create
 router.get('/create', (req, res) => {
+  if (!req.currentUserId) {
+    return res.send(`
+      <h2>You must be logged in to create a listing.</h2>
+      <a href="/users/login">Login</a>
+    `);
+  }
+
   res.render('create-listing');
 });
 
@@ -23,10 +36,12 @@ router.get('/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
-    const result = await pool.query(
-      'SELECT * FROM listings WHERE listing_id = $1',
-      [id]
-    );
+    const result = await pool.query(`
+      SELECT listings.*, users.name
+      FROM listings
+      JOIN users ON listings.user_id = users.user_id
+      WHERE listings.listing_id = $1
+    `, [id]);
 
     if (result.rows.length === 0) {
       return res.status(404).send('Listing not found');
@@ -41,6 +56,13 @@ router.get('/:id', async (req, res) => {
 
 // POST /listings/:id/request
 router.post('/:id/request', async (req, res) => {
+  if (!req.currentUserId) {
+    return res.send(`
+      <h2>You must be logged in to send a request.</h2>
+      <a href="/users/login">Login</a>
+    `);
+  }
+
   const { id } = req.params;
   const { request_message, contact_method, contact_value } = req.body;
 
@@ -62,7 +84,7 @@ router.post('/:id/request', async (req, res) => {
       VALUES ($1, $2, $3, $4, $5, $6, $7)`,
       [
         listing.listing_id,
-        1, // placeholder requester_id for now
+        req.currentUserId,
         listing.user_id,
         request_message,
         contact_method,
@@ -80,6 +102,13 @@ router.post('/:id/request', async (req, res) => {
 
 // POST /listings
 router.post('/', async (req, res) => {
+  if (!req.currentUserId) {
+    return res.send(`
+      <h2>You must be logged in to create a listing.</h2>
+      <a href="/users/login">Login</a>
+    `);
+  }
+
   const {
     title,
     description,
@@ -95,7 +124,7 @@ router.post('/', async (req, res) => {
       (user_id, type, title, description, category, availability, zip_code, status)
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
       [
-        1, // placeholder user_id for now
+        req.currentUserId,
         type,
         title,
         description,

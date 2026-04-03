@@ -6,6 +6,7 @@
 <body>
   <h1><%= listing.title %></h1>
 
+  <p><strong>Posted by:</strong> <%= listing.name %></p>
   <p><strong>Description:</strong> <%= listing.description %></p>
   <p><strong>Type:</strong> <%= listing.type %></p>
   <p><strong>Category:</strong> <%= listing.category %></p>
@@ -13,6 +14,7 @@
   <p><strong>Zip Code:</strong> <%= listing.zip_code %></p>
   <p><strong>Status:</strong> <%= listing.status %></p>
   <p><strong>Created:</strong> <%= listing.created_at %></p>
+  
 
   <hr />
 
@@ -40,6 +42,7 @@
     <div>
       <label for="contact_value">Contact Info:</label><br />
       <input type="text" id="contact_value" name="contact_value" required />
+      
     </div>
 
     <br />

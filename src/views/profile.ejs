@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= user.name %>'s Profile</title>
+</head>
+<body>
+  <h1><%= user.name %></h1>
+
+  <p><strong>Email:</strong> <%= user.email %></p>
+  <p><strong>Bio:</strong> <%= user.bio || 'No bio yet.' %></p>
+  <p><strong>Zip Code:</strong> <%= user.zip_code || 'Not provided' %></p>
+  <p><strong>Created:</strong> <%= user.created_at %></p>
+
+  <br />
+  <a href="/users">Back to Users</a>
+</body>
+</html>

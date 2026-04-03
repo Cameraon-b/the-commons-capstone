@@ -12,7 +12,11 @@
   <ul>
     <% listings.forEach(listing => { %>
       <li>
-        <a href="/listings/<%= listing.listing_id %>"><strong><%= listing.title %></strong></a> - <%= listing.description %><br />
+        <a href="/listings/<%= listing.listing_id %>"><strong><%= listing.title %></strong></a> 
+        - <%= listing.description %><br />
+
+        <p><strong>Posted by:</strong> <%= listing.name %></p>
+        
         Type: <%= listing.type %> |
         Category: <%= listing.category %> |
         Availability: <%= listing.availability %> |

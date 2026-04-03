@@ -1,14 +1,29 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Commons</title>
+  <title>The Commons</title>
 </head>
 <body>
-  <h1>Commons</h1>
-  <p>Your app is running.</p>
+  <h1>The Commons</h1>
+  <p>"There is no commons without commoning—the social practices and relationships of working together to support one another.  - Peter Linebaugh".</p>
 
+  <% if (currentUserId) { %>
+    <p>Logged in as: <strong><%= currentUserName %></strong></p>
+
+    <form action="/users/logout" method="POST" style="display:inline;">
+      <button type="submit">Logout</button>
+    </form>
+  <% } else { %>
+    <a href="/users/login">Login</a>
+    <br />
+    <a href="/users/register">Register</a>
+  <% } %>
+
+  <br /><br />
   <a href="/listings">Browse Listings</a>
   <br />
   <a href="/listings/create">Create Listing</a>
+  <br />
+  <a href="/users">View Users</a>
 </body>
 </html>
