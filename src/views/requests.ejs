@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Manage Requests</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <h1>Manage Requests</h1>
+
+  <p>Logged in as: <strong><%= currentUserName %></strong></p>
+
+  <h2>Incoming Requests</h2>
+
+  <% if (incomingRequests.length === 0) { %>
+    <p>No incoming requests.</p>
+  <% } else { %>
+    <ul>
+      <% incomingRequests.forEach(request => { %>
+        <li>
+          <strong>Listing:</strong> <%= request.listing_title %><br />
+          <strong>Requester:</strong> <%= request.requester_name %><br />
+          <strong>Message:</strong> <%= request.request_message %><br />
+          <strong>Contact:</strong> <%= request.contact_method %> - <%= request.contact_value %><br />
+          <strong>Status:</strong> <%= request.status %><br />
+          <strong>Created:</strong> <%= request.created_at %><br />
+
+          <% if (request.status === 'pending') { %>
+            <form action="/requests/<%= request.request_id %>/accept" method="POST" style="display:inline;">
+              <button type="submit">Accept</button>
+            </form>
+
+            <form action="/requests/<%= request.request_id %>/decline" method="POST" style="display:inline;">
+              <button type="submit">Decline</button>
+            </form>
+          <% } %>
+        </li>
+        <br />
+      <% }) %>
+    </ul>
+  <% } %>
+
+  <hr />
+
+  <h2>Outgoing Requests</h2>
+
+  <% if (outgoingRequests.length === 0) { %>
+    <p>No outgoing requests.</p>
+  <% } else { %>
+    <ul>
+      <% outgoingRequests.forEach(request => { %>
+        <li>
+          <strong>Listing:</strong> <%= request.listing_title %><br />
+          <strong>Owner:</strong> <%= request.owner_name %><br />
+          <strong>Message:</strong> <%= request.request_message %><br />
+          <strong>Status:</strong> <%= request.status %><br />
+          <strong>Created:</strong> <%= request.created_at %><br />
+        </li>
+        <br />
+      <% }) %>
+    </ul>
+  <% } %>
+
+  <br />
+  <a href="/">Back Home</a>
+</body>
+</html>

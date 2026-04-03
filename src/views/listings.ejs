@@ -2,31 +2,46 @@
 <html>
 <head>
   <title>Listings</title>
+  <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <h1>Listings</h1>
+  <div class="page">
+    <div class="topbar">
+      <div class="brand">The Commons</div>
+      <div class="nav-actions">
+        <a class="btn secondary" href="/">Home</a>
+        <a class="btn secondary" href="/requests">Requests</a>
+        <% if (currentUserId) { %>
+          <a class="btn secondary" href="/users/<%= currentUserId %>">Profile</a>
+        <% } %>
+      </div>
+    </div>
 
-  <a href="/listings/create">Create New Listing</a>
-  <br /><br />
+    <h1 class="section-title">Listings</h1>
 
-  <ul>
-    <% listings.forEach(listing => { %>
-      <li>
-        <a href="/listings/<%= listing.listing_id %>"><strong><%= listing.title %></strong></a> 
-        - <%= listing.description %><br />
+    <div class="actions">
+      <a class="btn" href="/listings/create">Create New Listing</a>
+    </div>
 
-        <p><strong>Posted by:</strong> <%= listing.name %></p>
-        
-        Type: <%= listing.type %> |
-        Category: <%= listing.category %> |
-        Availability: <%= listing.availability %> |
-        Zip: <%= listing.zip_code %> |
-        Status: <%= listing.status %>
-      </li>
-      <br />
-    <% }) %>
-  </ul>
+    <div class="stack">
+      <% listings.forEach(listing => { %>
+        <div class="card">
+          <div class="listing-card-title">
+            <a href="/listings/<%= listing.listing_id %>"><%= listing.title %></a>
+          </div>
 
-  <a href="/">Back to Home</a>
+          <p><%= listing.description %></p>
+          <p class="meta"><strong>Posted by:</strong> <%= listing.name %></p>
+          <p class="meta">
+            Type: <%= listing.type %> |
+            Category: <%= listing.category %> |
+            Availability: <%= listing.availability %> |
+            Zip: <%= listing.zip_code %> |
+            Status: <%= listing.status %>
+          </p>
+        </div>
+      <% }) %>
+    </div>
+  </div>
 </body>
 </html>

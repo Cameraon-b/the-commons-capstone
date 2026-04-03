@@ -22,10 +22,12 @@ router.get('/', async (req, res) => {
 // GET /listings/create
 router.get('/create', (req, res) => {
   if (!req.currentUserId) {
-    return res.send(`
-      <h2>You must be logged in to create a listing.</h2>
-      <a href="/users/login">Login</a>
-    `);
+    return res.render('message', {
+      title: 'Login Required',
+      message: 'You must be logged in to create a listing.',
+      actionText: 'Login',
+      actionHref: '/users/login'
+    });
   }
 
   res.render('create-listing');
@@ -78,6 +80,16 @@ router.post('/:id/request', async (req, res) => {
 
     const listing = listingResult.rows[0];
 
+    // prevent requesting your own listing
+    if (listing.user_id === req.currentUserId) {
+      return res.render('message', {
+        title: 'Action Not Allowed',
+        message: 'You cannot request your own listing.',
+        actionText: 'Back to Listings',
+        actionHref: '/listings'
+      });
+    }
+
     await pool.query(
       `INSERT INTO requests
       (listing_id, requester_id, owner_id, request_message, contact_method, contact_value, status)
@@ -103,10 +115,12 @@ router.post('/:id/request', async (req, res) => {
 // POST /listings
 router.post('/', async (req, res) => {
   if (!req.currentUserId) {
-    return res.send(`
-      <h2>You must be logged in to create a listing.</h2>
-      <a href="/users/login">Login</a>
-    `);
+    return res.render('message', {
+      title: 'Login Required',
+      message: 'You must be logged in to create a listing.',
+      actionText: 'Login',
+      actionHref: '/users/login'
+    });
   }
 
   const {

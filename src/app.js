@@ -5,6 +5,7 @@ require("dotenv").config();
 
 const listingsRoutes = require("./routes/listings");
 const usersRoutes = require("./routes/users");
+const requestsRoutes = require("./routes/requests");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -38,6 +39,7 @@ app.get("/", (req, res) => {
 
 app.use("/listings", listingsRoutes);
 app.use("/users", usersRoutes);
+app.use("/requests", requestsRoutes);
 
 app.listen(PORT, () => {
   console.log(`Commons running on http://localhost:${PORT}`);
