@@ -42,10 +42,10 @@
     </div>
 
     <% if (currentUserId) { %>
-      <div class="card" style="margin-bottom: 24px;">
+      <div class="card" style="margin-bottom: 24px; text-align: center;">
         <p class="meta">Hello, <strong><%= currentUserName %></strong></p>
 
-        <div class="actions">
+        <div class="actions" style="justify-content: center;">
           <a class="btn secondary" href="/requests">Manage Requests</a>
           <a class="btn secondary" href="/users/<%= currentUserId %>">My Profile</a>
           <a class="btn secondary" href="/users">View Users</a>
@@ -53,7 +53,14 @@
       </div>
     <% } %>
 
-    <div class="card">
+    <div class="card" style="margin-top: 24px; text-align: center;">
+      <p class="quote">
+        “There is no commons without commoning—the social practices and relationships of
+        working together to support one another.” — Peter Linebaugh
+      </p>
+    </div>
+
+    <div class="card" style="margin-top: 24px;">
       <h2>Featured Categories</h2>
 
       <div class="actions">
@@ -63,12 +70,6 @@
         <a class="btn secondary" href="/listings">Cooking</a>
         <a class="btn secondary" href="/listings">Cars</a>
       </div>
-    </div>
-    <div class="card" style="margin-top: 24px; text-align: center;">
-      <p class="quote">
-        “There is no commons without commoning—the social practices and relationships of
-        working together to support one another.” — Peter Linebaugh
-      </p>
     </div>
   </div>
 </body>

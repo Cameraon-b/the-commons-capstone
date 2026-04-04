@@ -34,6 +34,7 @@ body {
   background: #e8e8e8;
   padding: 18px 22px;
   margin-bottom: 18px;
+  border-bottom: 3px solid #2d1e81;
 }
 
 .brand, .section-title {
@@ -52,7 +53,7 @@ body {
 .btn,
 button,
 input[type="submit"] {
-  background: #222;
+  background: #2d1e81;
   color: white;
   border: none;
   border-radius: 10px;
@@ -61,10 +62,22 @@ input[type="submit"] {
   font-size: 1rem;
 }
 
+.btn:hover{
+  background: #4331a3;
+  color: white;
+  transition: 0.2s ease;
+}
+
 .btn.secondary {
   background: white;
   color: #222;
   border: 1px solid #888;
+}
+
+.btn.secondary:hover {
+  background: #4331a3;
+  color: white;
+  transition: 0.2s ease;
 }
 
 a {
@@ -175,6 +188,7 @@ textarea {
   font-size: 1.25rem;
   font-weight: 700;
   margin-bottom: 6px;
+  color: #2d1e81;
 }
 
 .inline-form {
