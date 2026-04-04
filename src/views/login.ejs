@@ -1,3 +1,5 @@
+<%# This file defines the EJS template for the "Login" page, which includes a form for users to enter their email and password to log in. The page also provides a link to the registration page for users who do not have an account. The top navigation bar includes a link to the home page. %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -5,27 +7,40 @@
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <h1>Login</h1>
 
-  <form action="/users/login" method="POST">
-    <div>
-      <label for="email">Email:</label><br />
-      <input type="email" id="email" name="email" required />
+  <div class="topbar">
+    <div class="brand">The Commons</div>
+    <div class="nav-actions">
+        <a class="btn secondary" href="/">Home</a>
+      </div>
     </div>
+  </div>
 
-    <br />
+  <div class="smallpage">
+    <div class="card" style="max-width: 400px; margin: 0 auto;">
+      <h1>Login</h1>
 
-    <div>
-      <label for="password">Password:</label><br />
-      <input type="password" id="password" name="password" required />
+      <form action="/users/login" method="POST">
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required />
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required />
+        </div>
+
+        <button type="submit" class="btn">Login</button>
+      </form>
+
+      <br />
+
+      <p>Don't have an account?</p>
+      <a href="/users/register">Register here</a>
     </div>
+  </div>
 
-    <br />
-
-    <button type="submit">Login</button>
-  </form>
-
-  <br />
-  <a href="/">Back Home</a>
 </body>
 </html>

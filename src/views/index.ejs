@@ -1,3 +1,5 @@
+<%# index.ejs - This is the main landing page for the web application. It serves as the entry point for users, providing an overview of the platform and guiding them to key features such as browsing listings, creating listings, managing requests, and viewing user profiles. The page dynamically adjusts its content based on whether a user is logged in or not, offering personalized greetings and relevant actions for authenticated users while encouraging new visitors to sign up or explore the platform. %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -5,28 +7,69 @@
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <h1>The Commons</h1>
-  <p>"There is no commons without commoning—the social practices and relationships of working together to support one another.  - Peter Linebaugh".</p>
+  <div class="page">
+    <div class="topbar">
+      <div class="brand">The Commons</div>
 
-  <% if (currentUserId) { %>
-    <p>Logged in as: <strong><%= currentUserName %></strong></p>
+      <div class="nav-actions">
+        <% if (currentUserId) { %>
 
-    <form action="/users/logout" method="POST" style="display:inline;">
-      <button type="submit">Logout</button>
-    </form>
-  <% } else { %>
-    <a href="/users/login">Login</a>
-    <br />
-    <a href="/users/register">Register</a>
-  <% } %>
+          <form action="/users/logout" method="POST" class="inline-form">
+            <button type="submit">Logout</button>
+          </form>
+        <% } else { %>
+          <a class="btn secondary" href="/users/login">Login</a>
+          <a class="btn secondary" href="/users/register">Sign Up</a>
+        <% } %>
+      </div>
+    </div>
 
-  <br /><br />
-  <a href="/listings">Browse Listings</a>
-  <br />
-  <a href="/listings/create">Create Listing</a>
-  <br />
-  <a href="/requests">Manage Requests</a>
-  <br />
-  <a href="/users">View Users</a>
+    <div class="card" style="text-align: center; margin-bottom: 24px;">
+      <h1 class="section-title" style="margin-bottom: 8px;">Sharing Tools. Sharing Skills.</h1>
+      <p style="font-size: 1.2rem; margin-bottom: 18px;">
+        Building networks of mutual aid.
+      </p>
+
+      <div class="actions" style="justify-content: center;">
+        <% if (currentUserId) { %>
+          <a class="btn" href="/listings">Browse Listings</a>
+          <a class="btn secondary" href="/listings/create">Create Listing</a>
+        <% } else { %>
+          <a class="btn" href="/users/register">Get Started</a>
+          <a class="btn secondary" href="/listings">Browse Listings</a>
+        <% } %>
+      </div>
+    </div>
+
+    <% if (currentUserId) { %>
+      <div class="card" style="margin-bottom: 24px;">
+        <p class="meta">Hello, <strong><%= currentUserName %></strong></p>
+
+        <div class="actions">
+          <a class="btn secondary" href="/requests">Manage Requests</a>
+          <a class="btn secondary" href="/users/<%= currentUserId %>">My Profile</a>
+          <a class="btn secondary" href="/users">View Users</a>
+        </div>
+      </div>
+    <% } %>
+
+    <div class="card">
+      <h2>Featured Categories</h2>
+
+      <div class="actions">
+        <a class="btn secondary" href="/listings">Tech</a>
+        <a class="btn secondary" href="/listings">Gardening</a>
+        <a class="btn secondary" href="/listings">Repairs</a>
+        <a class="btn secondary" href="/listings">Cooking</a>
+        <a class="btn secondary" href="/listings">Cars</a>
+      </div>
+    </div>
+    <div class="card" style="margin-top: 24px; text-align: center;">
+      <p class="quote">
+        “There is no commons without commoning—the social practices and relationships of
+        working together to support one another.” — Peter Linebaugh
+      </p>
+    </div>
+  </div>
 </body>
 </html>

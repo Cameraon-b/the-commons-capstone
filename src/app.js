@@ -1,3 +1,7 @@
+// This file sets up the Express application, including middleware for parsing request bodies, serving static files, and managing user sessions. It also defines the routes for the application, including the home page and routes for listings, users, and requests. The application listens on a specified port and logs a message when it is running.
+
+// During development, AI tools (ChatGPT & Copilot) were used as a support resource for generating initial code examples, troubleshooting issues, and exploring design ideas. The final implementation reflects my own understanding, modifications, and integration of these concepts.
+
 const express = require("express");
 const path = require("path");
 const session = require("express-session");

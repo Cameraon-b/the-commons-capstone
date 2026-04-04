@@ -1,3 +1,6 @@
+// This file defines the Express router for handling listing-related routes, including viewing all listings, creating a new listing, viewing a specific listing, and sending a request for a listing. It interacts with the PostgreSQL database to manage listing data and uses EJS templates to render the appropriate views for each route. The router includes error handling for common issues such as unauthorized access and database errors.
+
+
 const express = require('express');
 const router = express.Router();
 const pool = require('../config/db');

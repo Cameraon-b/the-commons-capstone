@@ -1,3 +1,5 @@
+<%# This file defines the EJS template for the "Profile" page, which displays the user's profile information, including their name, email, bio, zip code, join date, and placeholders for rating and completed exchanges. The page also includes sections for the user's tools and skills, which are currently placeholders. The top navigation bar includes links to the home page, listings page, requests page, and user profile. %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -5,14 +7,46 @@
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <h1><%= user.name %></h1>
+  <div class="page">
+    <div class="topbar">
+      <div class="brand">The Commons</div>
 
-  <p><strong>Email:</strong> <%= user.email %></p>
-  <p><strong>Bio:</strong> <%= user.bio || 'No bio yet.' %></p>
-  <p><strong>Zip Code:</strong> <%= user.zip_code || 'Not provided' %></p>
-  <p><strong>Created:</strong> <%= user.created_at %></p>
+      <div class="nav-actions">
+        <a class="btn secondary" href="/">Home</a>
+        <a class="btn secondary" href="/listings">Return to Listings</a>
+        <a class="btn secondary" href="/requests">Requests</a>
+      </div>
+    </div>
 
-  <br />
-  <a href="/users">Back to Users</a>
+    <h1 class="section-title">My Profile</h1>
+
+    <!-- Profile Info -->
+    <div class="card">
+      <h2><%= user.name %></h2>
+
+      <p class="meta"><strong>Email:</strong> <%= user.email %></p>
+      <p><strong>About:</strong> <%= user.bio || 'No bio yet.' %></p>
+      <p><strong>Zip Code:</strong> <%= user.zip_code || 'Not provided' %></p>
+      <p class="meta"><strong>Joined:</strong> <%= user.created_at %></p>
+
+      <hr />
+
+      <p><strong>Rating:</strong> 4.8 (placeholder)</p>
+      <p><strong>Completed Exchanges:</strong> 0 (placeholder)</p>
+    </div>
+
+    <!-- Tools & Skills (placeholder for now) -->
+    <div class="card-grid two" style="margin-top: 20px;">
+      <div class="card">
+        <h3>My Tools</h3>
+        <p class="meta">Coming soon...</p>
+      </div>
+
+      <div class="card">
+        <h3>My Skills</h3>
+        <p class="meta">Coming soon...</p>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

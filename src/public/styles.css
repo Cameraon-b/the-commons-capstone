@@ -1,12 +1,26 @@
+/* styles.css - This file contains the CSS styles for the web application. It defines the overall look and feel of the site, including layout, typography, colors, and responsive design. The styles are organized into classes that can be applied to HTML elements in the EJS templates to ensure a consistent and visually appealing user interface across all pages of the application. */
+
+* {
+  box-sizing: border-box;
+}
+
 body {
-  font-family: Arial, sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   background: #d9d9d9;
   margin: 0;
   color: #111;
 }
 
 .page {
-  max-width: 1300px;
+  max-width: 1800px;
+  margin: 24px auto;
+  background: #efefef;
+  border: 12px solid #cfcfcf;
+  padding: 20px;
+}
+
+.smallpage {
+  max-width: 450px;
   margin: 24px auto;
   background: #efefef;
   border: 12px solid #cfcfcf;
@@ -22,8 +36,9 @@ body {
   margin-bottom: 18px;
 }
 
-.brand {
-  font-size: 2.2rem;
+.brand, .section-title {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: 4.5rem;
   font-weight: 500;
 }
 
@@ -101,6 +116,7 @@ a {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  margin-bottom: 16px;
 }
 
 input,
@@ -184,4 +200,12 @@ hr {
     align-items: flex-start;
     gap: 12px;
   }
+}
+
+.quote {
+  text-align: center;
+  font-style: italic;
+  font-size: 1.1rem;
+  color: #444;
+  margin: 18px 0;
 }

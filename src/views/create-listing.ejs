@@ -1,3 +1,5 @@
+<%# This file defines the EJS template for the "Create Listing" page, which includes a form for users to submit new listings of tools or skills. The form captures details such as type, title, description, category, availability, and zip code. The page also includes navigation links to the home page, listings page, and user profile if the user is logged in. %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,6 +11,7 @@
     <div class="topbar">
       <div class="brand">The Commons</div>
       <div class="nav-actions">
+        <a class="btn secondary" href="/">Home</a>
         <a class="btn secondary" href="/listings">Return to Listings</a>
         <% if (currentUserId) { %>
           <a class="btn secondary" href="/users/<%= currentUserId %>">Profile</a>

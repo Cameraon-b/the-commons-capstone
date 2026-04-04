@@ -1,3 +1,5 @@
+// This file defines the Express router for handling user-related routes, including registration, login, logout, and profile viewing. It interacts with the PostgreSQL database to manage user data and uses EJS templates to render the appropriate views for each route. The router includes error handling for common issues such as duplicate email registration and incorrect login credentials.
+
 const express = require('express');
 const router = express.Router();
 const pool = require('../config/db');

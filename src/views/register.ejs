@@ -1,52 +1,60 @@
-<!DOCTYPE html>
+<%# This file defines the EJS template for the "Register" page, which includes a form for users to create a new account. The form captures the user's name, email, password, bio, and zip code. The page also includes a link to the login page for users who already have an account. The top navigation bar includes a link to the home page. %>
+
+!DOCTYPE html>
 <html>
 <head>
   <title>Register</title>
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <h1>Create Account</h1>
 
-  <form action="/users/register" method="POST">
-    <div>
-      <label for="name">Name:</label><br />
-      <input type="text" id="name" name="name" required />
+  <div class="topbar">
+    <div class="brand">The Commons</div>
+    <div class="nav-actions">
+        <a class="btn secondary" href="/">Home</a>
+      </div>
+  </div>
+
+  <div class="smallpage">
+    <div class="card" style="max-width: 500px; margin: 0 auto;">
+      <h1>Create Account</h1>
+
+      <form action="/users/register" method="POST">
+
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" required />
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required />
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required />
+        </div>
+
+        <div class="form-group">
+          <label for="bio">Bio</label>
+          <textarea id="bio" name="bio" rows="4"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="zip_code">Zip Code</label>
+          <input type="text" id="zip_code" name="zip_code" />
+        </div>
+
+        <button type="submit" class="btn">Create Account</button>
+      </form>
+
+      <br />
+
+      <p>Already have an account?</p>
+      <a href="/users/login">Login here</a>
     </div>
+  </div>
 
-    <br />
-
-    <div>
-      <label for="email">Email:</label><br />
-      <input type="email" id="email" name="email" required />
-    </div>
-
-    <br />
-
-    <div>
-      <label for="password">Password:</label><br />
-      <input type="password" id="password" name="password" required />
-    </div>
-
-    <br />
-
-    <div>
-      <label for="bio">Bio:</label><br />
-      <textarea id="bio" name="bio" rows="4" cols="40"></textarea>
-    </div>
-
-    <br />
-
-    <div>
-      <label for="zip_code">Zip Code:</label><br />
-      <input type="text" id="zip_code" name="zip_code" />
-    </div>
-
-    <br />
-
-    <button type="submit">Create Account</button>
-  </form>
-
-  <br />
-  <a href="/">Back Home</a>
 </body>
 </html>

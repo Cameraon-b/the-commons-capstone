@@ -1,3 +1,5 @@
+// This file defines the Express router for handling request-related routes, including viewing incoming and outgoing requests, accepting requests, and declining requests. It interacts with the PostgreSQL database to manage request data and uses EJS templates to render the appropriate views for each route. The router includes error handling for common issues such as unauthorized access and database errors.
+
 const express = require('express');
 const router = express.Router();
 const pool = require('../config/db');
