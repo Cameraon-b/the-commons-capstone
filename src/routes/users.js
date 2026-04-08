@@ -101,16 +101,41 @@ router.get('/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
-    const result = await pool.query(
+    const userResult = await pool.query(
       'SELECT * FROM users WHERE user_id = $1',
       [id]
     );
 
-    if (result.rows.length === 0) {
+    if (userResult.rows.length === 0) {
       return res.status(404).send('User not found');
     }
 
-    res.render('profile', { user: result.rows[0] });
+    const reviewsResult = await pool.query(
+      `
+      SELECT reviews.*, users.name AS reviewer_name
+      FROM reviews
+      JOIN users ON reviews.reviewer_id = users.user_id
+      WHERE reviewed_user_id = $1
+      ORDER BY reviews.created_at DESC
+      `,
+      [id]
+    );
+
+    const avgResult = await pool.query(
+      `
+      SELECT AVG(rating)::numeric(10,2) AS average_rating, COUNT(*) AS review_count
+      FROM reviews
+      WHERE reviewed_user_id = $1
+      `,
+      [id]
+    );
+
+    res.render('profile', {
+      user: userResult.rows[0],
+      reviews: reviewsResult.rows,
+      averageRating: avgResult.rows[0].average_rating,
+      reviewCount: avgResult.rows[0].review_count
+    });
   } catch (err) {
     console.error(err);
     res.send('Error retrieving profile');

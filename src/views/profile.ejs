@@ -20,7 +20,6 @@
 
     <h1 class="section-title">My Profile</h1>
 
-    <!-- Profile Info -->
     <div class="card">
       <h2><%= user.name %></h2>
 
@@ -31,21 +30,26 @@
 
       <hr />
 
-      <p><strong>Rating:</strong> 4.8 (placeholder)</p>
-      <p><strong>Completed Exchanges:</strong> 0 (placeholder)</p>
+      <p><strong>Rating:</strong> <%= averageRating || 'No rating yet' %></p>
+      <p><strong>Total Reviews:</strong> <%= reviewCount %></p>
     </div>
 
-    <!-- Tools & Skills (placeholder for now) -->
-    <div class="card-grid two" style="margin-top: 20px;">
-      <div class="card">
-        <h3>My Tools</h3>
-        <p class="meta">Coming soon...</p>
-      </div>
+    <div class="card" style="margin-top: 20px;">
+      <h3>Recent Reviews</h3>
 
-      <div class="card">
-        <h3>My Skills</h3>
-        <p class="meta">Coming soon...</p>
-      </div>
+      <% if (reviews.length === 0) { %>
+        <p class="meta">No reviews yet.</p>
+      <% } else { %>
+        <div class="stack">
+          <% reviews.forEach(review => { %>
+            <div class="card" style="background:#f8f8f8;">
+              <p><strong><%= review.rating %>/5</strong> from <%= review.reviewer_name %></p>
+              <p><%= review.comment %></p>
+              <p class="meta"><%= review.created_at %></p>
+            </div>
+          <% }) %>
+        </div>
+      <% } %>
     </div>
   </div>
 </body>

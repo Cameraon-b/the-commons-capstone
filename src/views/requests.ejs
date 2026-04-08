@@ -127,7 +127,7 @@
 
                 <% if (request.status === 'completed') { %>
                   <div class="actions">
-                    <a href="#" class="btn secondary">Leave Review</a>
+                    <a href="/reviews/<%= request.request_id %>/new" class="btn secondary">Leave Review</a>
                   </div>
                 <% } %>
               </div>
