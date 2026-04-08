@@ -7,53 +7,102 @@
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <h1><%= listing.title %></h1>
+  <div class="page">
+    <div class="topbar">
+      <div class="brand">The Commons</div>
 
-  <p><strong>Posted by:</strong> <%= listing.name %></p>
-  <p><strong>Description:</strong> <%= listing.description %></p>
-  <p><strong>Type:</strong> <%= listing.type %></p>
-  <p><strong>Category:</strong> <%= listing.category %></p>
-  <p><strong>Availability:</strong> <%= listing.availability %></p>
-  <p><strong>Zip Code:</strong> <%= listing.zip_code %></p>
-  <p><strong>Status:</strong> <%= listing.status %></p>
-  <p><strong>Created:</strong> <%= listing.created_at %></p>
-  
-
-  <hr />
-
-  <h2>Request This Listing</h2>
-
-  <form action="/listings/<%= listing.listing_id %>/request" method="POST">
-    <div>
-      <label for="request_message">Message:</label><br />
-      <textarea id="request_message" name="request_message" rows="4" cols="40" required></textarea>
+      <div class="nav-actions">
+        <a class="btn secondary" href="/">Home</a>
+        <a class="btn secondary" href="/listings">Return to Listings</a>
+        <% if (currentUserId) { %>
+          <a class="btn secondary" href="/users/<%= currentUserId %>">Profile</a>
+        <% } %>
+      </div>
     </div>
 
-    <br />
+    <div class="card">
+      <h1 class="section-title"><%= listing.title %></h1>
 
-    <div>
-      <label for="contact_method">Preferred Contact Method:</label><br />
-      <select id="contact_method" name="contact_method" required>
-        <option value="text">Text</option>
-        <option value="email">Email</option>
-        <option value="phone">Phone</option>
-      </select>
+      <p class="meta">
+        <strong>Type:</strong> <%= listing.type %>
+      </p>
+
+      <p class="meta">
+        <strong>Status:</strong>
+        <span class="status-badge"><%= listing.status %></span>
+      </p>
+
+      <p class="meta">
+        <strong>Posted:</strong> <%= listing.created_at %>
+      </p>
+
+      <p class="meta">
+        <strong>Zip Code:</strong> <%= listing.zip_code %>
+      </p>
+
+      <p class="meta">
+        <strong>Owner:</strong> <%= listing.name %>
+      </p>
+
+      <p class="meta">
+        <strong>Rating:</strong> 4.8 / 5 (placeholder)
+      </p>
+
+      <hr />
+
+      <p><strong>Description:</strong></p>
+      <p><%= listing.description %></p>
+
+      <p><strong>Category:</strong> <%= listing.category %></p>
+      <p><strong>Availability:</strong> <%= listing.availability %></p>
+
+      <hr />
+
+      <h2>Recent Reviews</h2>
+      <div class="card" style="background:#f8f8f8;">
+        <p class="meta">5/5 - Quick to respond, easy to coordinate. (placeholder)</p>
+      </div>
+
+      <hr />
+
+      <% if (currentUserId && listing.user_id !== currentUserId && listing.status === 'available') { %>
+        <h2>Request This Listing</h2>
+
+        <form action="/listings/<%= listing.listing_id %>/request" method="POST" class="stack">
+          <div class="form-group">
+            <label for="request_message">Message</label>
+            <textarea id="request_message" name="request_message" rows="4" required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="contact_method">Preferred Contact Method</label>
+            <select id="contact_method" name="contact_method" required>
+              <option value="text">Text</option>
+              <option value="email">Email</option>
+              <option value="phone">Phone</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="contact_value">Contact Info</label>
+            <input type="text" id="contact_value" name="contact_value" required />
+          </div>
+
+          <div class="actions">
+            <button type="submit" class="btn">Request</button>
+          </div>
+        </form>
+      <% } else if (!currentUserId) { %>
+        <div class="actions">
+          <a class="btn" href="/users/login">Login to Request</a>
+        </div>
+      <% } else if (listing.user_id === currentUserId) { %>
+        <p class="meta"><strong>This is your listing.</strong></p>
+
+      <% } else { %>
+        <p class="meta"><strong>This listing is currently not available for requests.</strong></p>
+      <% } %>
     </div>
-
-    <br />
-
-    <div>
-      <label for="contact_value">Contact Info:</label><br />
-      <input type="text" id="contact_value" name="contact_value" required />
-      
-    </div>
-
-    <br />
-
-    <button type="submit">Send Request</button>
-  </form>
-
-  <br />
-  <a href="/listings">Back to Listings</a>
+  </div>
 </body>
 </html>

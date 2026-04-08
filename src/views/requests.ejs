@@ -28,6 +28,8 @@
       <div>
         <h2>Incoming</h2>
 
+        <% const activeIncoming = incomingRequests.filter(request => request.status === 'pending' || request.status === 'accepted'); %>
+
         <% if (incomingRequests.length === 0) { %>
           <div class="card">
             <p>No incoming requests.</p>
@@ -51,6 +53,14 @@
 
                     <form action="/requests/<%= request.request_id %>/decline" method="POST" class="inline-form">
                       <button type="submit">Decline</button>
+                    </form>
+                  </div>
+                <% } %>
+
+                <% if (request.status === 'accepted') { %>
+                  <div class="actions">
+                    <form action="/requests/<%= request.request_id %>/complete" method="POST" class="inline-form">
+                      <button type="submit" class="btn secondary">Mark Complete</button>
                     </form>
                   </div>
                 <% } %>
@@ -88,26 +98,39 @@
       <div>
         <h2>History</h2>
 
-        <% if (outgoingRequests.length === 0) { %>
+        <% if (historyRequests.length === 0) { %>
           <div class="card">
             <p>No request history yet.</p>
           </div>
         <% } else { %>
           <div class="stack">
-            <% outgoingRequests.forEach(request => { %>
-              <% if (request.status === 'declined' || request.status === 'completed') { %>
-                <div class="card">
-                  <h3>Requested <%= request.listing_title %> from <%= request.owner_name %></h3>
-                  <p class="meta"><strong>Created:</strong> <%= request.created_at %></p>
-                  <p><strong>Status:</strong> <%= request.status %></p>
-
-                  <% if (request.status === 'completed') { %>
-                    <div class="actions">
-                      <a href="#" class="btn secondary">Leave Review</a>
-                    </div>
+            <% historyRequests.forEach(request => { %>
+              <div class="card">
+                <h3>
+                  <% if (request.listing_title) { %>
+                    <%= request.listing_title %>
+                  <% } else { %>
+                    Request
                   <% } %>
-                </div>
-              <% } %>
+                </h3>
+
+                <% if (request.requester_name) { %>
+                  <p><strong>Requester:</strong> <%= request.requester_name %></p>
+                <% } %>
+
+                <% if (request.owner_name) { %>
+                  <p><strong>Owner:</strong> <%= request.owner_name %></p>
+                <% } %>
+
+                <p class="meta"><strong>Created:</strong> <%= request.created_at %></p>
+                <p><strong>Status:</strong> <%= request.status %></p>
+
+                <% if (request.status === 'completed') { %>
+                  <div class="actions">
+                    <a href="#" class="btn secondary">Leave Review</a>
+                  </div>
+                <% } %>
+              </div>
             <% }) %>
           </div>
         <% } %>

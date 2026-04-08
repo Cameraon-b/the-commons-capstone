@@ -93,6 +93,15 @@ router.post('/:id/request', async (req, res) => {
       });
     }
 
+    if (listing.status !== 'available') {
+      return res.render('message', {
+        title: 'Listing Unavailable',
+        message: 'This listing is currently not available for new requests.',
+        actionText: 'Back to Listings',
+        actionHref: '/listings'
+      });
+    }
+
     await pool.query(
       `INSERT INTO requests
       (listing_id, requester_id, owner_id, request_message, contact_method, contact_value, status)

@@ -1,11 +1,14 @@
 /* styles.css - This file contains the CSS styles for the web application. It defines the overall look and feel of the site, including layout, typography, colors, and responsive design. The styles are organized into classes that can be applied to HTML elements in the EJS templates to ensure a consistent and visually appealing user interface across all pages of the application. */
 
+@import url('https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&display=swap');
+
 * {
   box-sizing: border-box;
 }
 
 body {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Georgia, 'Times New Roman', Times, serif;
   background: #d9d9d9;
   margin: 0;
   color: #111;
@@ -37,10 +40,15 @@ body {
   border-bottom: 3px solid #2d1e81;
 }
 
-.brand, .section-title {
-  font-family: Georgia, 'Times New Roman', Times, serif;
+.brand {
+  font-family: 'UnifrakturMaguntia', cursive;
   font-size: 4.5rem;
   font-weight: 500;
+}
+
+.section-title {
+  font-size: 2.2rem;
+  font-weight: 700;
 }
 
 .nav-actions,
@@ -108,6 +116,18 @@ a {
   border-radius: 10px;
   padding: 20px;
   box-shadow: 0 2px 10px rgba(0,0,0,.12);
+}
+
+.card-hover {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0,0,0,.12);
+}
+
+.card-hover:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
 }
 
 .card h3, .card h2 {
@@ -222,4 +242,13 @@ hr {
   font-size: 1.1rem;
   color: #444;
   margin: 18px 0;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #e9e7f5;
+  color: #2d1e81;
+  font-weight: 600;
 }

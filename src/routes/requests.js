@@ -9,7 +9,7 @@ router.get('/', async (req, res) => {
   if (!req.currentUserId) {
     return res.render('message', {
       title: 'Login Required',
-      message: 'You must be logged in to send a request.',
+      message: 'You must be logged in to view requests.',
       actionText: 'Login',
       actionHref: '/users/login'
     });
@@ -40,9 +40,27 @@ router.get('/', async (req, res) => {
       [req.currentUserId]
     );
 
+    const incomingRequests = incomingResult.rows.filter(
+      request => request.status === 'pending' || request.status === 'accepted'
+    );
+
+    const outgoingRequests = outgoingResult.rows.filter(
+      request => request.status === 'pending' || request.status === 'accepted'
+    );
+
+    const historyRequests = [
+      ...incomingResult.rows.filter(
+        request => request.status === 'declined' || request.status === 'completed'
+      ),
+      ...outgoingResult.rows.filter(
+        request => request.status === 'declined' || request.status === 'completed'
+      )
+    ].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
     res.render('requests', {
-      incomingRequests: incomingResult.rows,
-      outgoingRequests: outgoingResult.rows
+      incomingRequests,
+      outgoingRequests,
+      historyRequests
     });
   } catch (err) {
     console.error(err);
@@ -64,6 +82,19 @@ router.post('/:id/accept', async (req, res) => {
   const { id } = req.params;
 
   try {
+    // First get the request so we know which listing it belongs to
+    const requestResult = await pool.query(
+      'SELECT * FROM requests WHERE request_id = $1 AND owner_id = $2',
+      [id, req.currentUserId]
+    );
+
+    if (requestResult.rows.length === 0) {
+      return res.send('Request not found');
+    }
+
+    const request = requestResult.rows[0];
+
+    // Update request status
     await pool.query(
       `
       UPDATE requests
@@ -71,6 +102,16 @@ router.post('/:id/accept', async (req, res) => {
       WHERE request_id = $1 AND owner_id = $2
       `,
       [id, req.currentUserId]
+    );
+
+    // Update listing status
+    await pool.query(
+      `
+      UPDATE listings
+      SET status = 'in use', updated_at = NOW()
+      WHERE listing_id = $1
+      `,
+      [request.listing_id]
     );
 
     res.redirect('/requests');
@@ -107,6 +148,59 @@ router.post('/:id/decline', async (req, res) => {
   } catch (err) {
     console.error(err);
     res.send('Error declining request');
+  }
+});
+
+// POST /requests/:id/complete
+router.post('/:id/complete', async (req, res) => {
+  if (!req.currentUserId) {
+    return res.render('message', {
+      title: 'Login Required',
+      message: 'You must be logged in to manage requests.',
+      actionText: 'Login',
+      actionHref: '/users/login'
+    });
+  }
+
+  const { id } = req.params;
+
+  try {
+    // Get request first
+    const requestResult = await pool.query(
+      'SELECT * FROM requests WHERE request_id = $1 AND owner_id = $2',
+      [id, req.currentUserId]
+    );
+
+    if (requestResult.rows.length === 0) {
+      return res.send('Request not found');
+    }
+
+    const request = requestResult.rows[0];
+
+    // Update request status
+    await pool.query(
+      `
+      UPDATE requests
+      SET status = 'completed', updated_at = NOW()
+      WHERE request_id = $1 AND owner_id = $2
+      `,
+      [id, req.currentUserId]
+    );
+
+    // Update listing status
+    await pool.query(
+      `
+      UPDATE listings
+      SET status = 'available', updated_at = NOW()
+      WHERE listing_id = $1
+      `,
+      [request.listing_id]
+    );
+
+    res.redirect('/requests');
+  } catch (err) {
+    console.error(err);
+    res.send('Error completing request');
   }
 });
 
