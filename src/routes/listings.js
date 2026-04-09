@@ -4,21 +4,75 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../config/db');
+const zipcodes = require('zipcodes');
 
-// GET /listings
+
 router.get('/', async (req, res) => {
   try {
-    const result = await pool.query(`
+    const { zip_code, radius, category, type } = req.query;
+
+    let conditions = [];
+    let values = [];
+    let valueIndex = 1;
+
+    if (zip_code && radius) {
+      const nearbyZips = zipcodes.radius(zip_code, parseInt(radius));
+
+      conditions.push(`listings.zip_code = ANY($${valueIndex})`);
+      values.push(nearbyZips);
+      valueIndex++;
+    }
+
+    if (category) {
+      conditions.push(`LOWER(listings.category) LIKE LOWER($${valueIndex})`);
+      values.push(`%${category}%`);
+      valueIndex++;
+    }
+
+    if (type) {
+      conditions.push(`LOWER(listings.type) = LOWER($${valueIndex})`);
+      values.push(type);
+      valueIndex++;
+    }
+
+    let query = `
       SELECT listings.*, users.name
       FROM listings
       JOIN users ON listings.user_id = users.user_id
-      ORDER BY listings.created_at DESC
-    `);
+    `;
 
-    res.render('listings', { listings: result.rows });
+    if (conditions.length > 0) {
+      query += ` WHERE ` + conditions.join(' AND ');
+    }
+
+    query += ` ORDER BY listings.created_at DESC`;
+
+    const result = await pool.query(query, values);
+    let listings = result.rows;
+
+    if (zip_code) {
+      listings = listings.map(listing => {
+        const distance = Math.round(zipcodes.distance(zip_code, listing.zip_code));
+
+        return {
+          ...listing,
+          distance
+        };
+      });
+    }
+
+    res.render('listings', {
+      listings,
+      currentZip: zip_code || '',
+      currentRadius: radius || '',
+      currentCategory: category || '',
+      currentType: type || ''
+
+    });
+
   } catch (err) {
     console.error(err);
-    res.send('Database error');
+    res.send('Error loading listings');
   }
 });
 
@@ -52,7 +106,28 @@ router.get('/:id', async (req, res) => {
       return res.status(404).send('Listing not found');
     }
 
-    res.render('listing-detail', { listing: result.rows[0] });
+    const listing = result.rows[0];
+    let distance = null;
+
+    if (req.currentUserId) {
+      const userResult = await pool.query(
+        'SELECT zip_code FROM users WHERE user_id = $1',
+        [req.currentUserId]
+      );
+
+      if (userResult.rows.length > 0) {
+        const userZip = userResult.rows[0].zip_code;
+
+        if (userZip && listing.zip_code) {
+          distance = Math.round(zipcodes.distance(userZip, listing.zip_code));
+        }
+      }
+    }
+
+    res.render('listing-detail', {
+      listing,
+      distance
+    });
   } catch (err) {
     console.error(err);
     res.send('Error retrieving listing');

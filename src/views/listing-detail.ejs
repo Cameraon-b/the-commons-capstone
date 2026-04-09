@@ -36,9 +36,15 @@
         <strong>Posted:</strong> <%= listing.created_at %>
       </p>
 
-      <p class="meta">
-        <strong>Zip Code:</strong> <%= listing.zip_code %>
-      </p>
+      <% if (distance !== null) { %>
+        <p class="meta">
+          <strong><%= distance %> miles away</strong> (Zip: <%= listing.zip_code %>)
+        </p>
+      <% } else { %>
+        <p class="meta">
+          <strong>Zip Code:</strong> <%= listing.zip_code %>
+        </p>
+      <% } %>
 
       <p class="meta">
         <strong>Owner:</strong> <%= listing.name %>

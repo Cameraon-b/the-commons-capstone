@@ -8,7 +8,7 @@
 }
 
 body {
-  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-family: 'Playfair Display',a , serif;
   background:#f0efef;
   margin: 0;
   color: #111;
@@ -157,6 +157,13 @@ a {
   margin-bottom: 16px;
 }
 
+.form-group-tight {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  margin-bottom: 5px;
+}
+
 input,
 textarea,
 select {
@@ -256,4 +263,23 @@ hr {
   background: #e9e7f5;
   color: #2d1e81;
   font-weight: 600;
+}
+
+.filter-form {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(160px, 1fr));
+  gap: 14px;
+  align-items: end;
+}
+
+.filter-actions {
+  display: flex;
+  gap: 12px;
+  align-items: end;
+}
+
+@media (max-width: 900px) {
+  .filter-form {
+    grid-template-columns: 1fr;
+  }
 }
