@@ -1,5 +1,3 @@
-<%# This file defines the EJS template for the "Create Listing" page, which includes a form for users to submit new listings of tools or skills. The form captures details such as type, title, description, category, availability, and zip code. The page also includes navigation links to the home page, listings page, and user profile if the user is logged in. %>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,57 +8,128 @@
   <div class="page">
     <div class="topbar">
       <div class="brand">The Commons</div>
+
       <div class="nav-actions">
         <a class="btn secondary" href="/">Home</a>
-        <a class="btn secondary" href="/listings">Return to Listings</a>
-        <% if (currentUserId) { %>
-          <a class="btn secondary" href="/users/<%= currentUserId %>">Profile</a>
-        <% } %>
+        <a class="btn secondary" href="/listings">Back to Listings</a>
+        <a class="btn secondary" href="/users/<%= currentUserId %>">Profile</a>
       </div>
     </div>
 
     <h1 class="section-title">Create Listing</h1>
 
-    <div class="card">
-      <form action="/listings" method="POST" class="stack">
-        <div class="form-group">
-          <label for="type">Type</label>
-          <select id="type" name="type" required>
-            <option value="Tool">Tool</option>
-            <option value="Skill">Skill</option>
-          </select>
-        </div>
+    <% if (!toolId && !skillId) { %>
+      <div class="card" style="margin-bottom: 20px;">
+        <h3>Select from Your Inventory</h3>
 
-        <div class="form-group">
-          <label for="title">Title</label>
-          <input type="text" id="title" name="title" required>
-        </div>
+        <% if (tools.length === 0 && skills.length === 0) { %>
+          <p class="meta">You do not have any tools or skills in your inventory yet.</p>
+          <p>
+            <a class="btn" href="/users/<%= currentUserId %>">Go to Profile</a>
+          </p>
+        <% } else { %>
+          <form action="/listings/create" method="GET" class="stack">
+            <div class="form-group">
+              <label for="inventory_item"><strong>Choose a tool or skill</strong></label>
+              <select name="inventory_item" id="inventory_item" required>
+                <option value="">Select an item</option>
 
-        <div class="form-group">
-          <label for="description">Description</label>
-          <textarea id="description" name="description" required></textarea>
-        </div>
+                <% tools.forEach(tool => { %>
+                  <option value="tool:<%= tool.tool_id %>">
+                    [Tool] - <%= tool.name %>
+                  </option>
+                <% }) %>
 
-        <div class="form-group">
-          <label for="category">Category</label>
-          <input type="text" id="category" name="category" required>
-        </div>
+                <% skills.forEach(skill => { %>
+                  <option value="skill:<%= skill.skill_id %>">
+                    [Skill] - <%= skill.name %>
+                  </option>
+                <% }) %>
+              </select>
+            </div>
 
-        <div class="form-group">
-          <label for="availability">Availability</label>
-          <input type="text" id="availability" name="availability" required>
-        </div>
+            <button class="btn" type="submit">Use Selected Item</button>
+          </form>
+        <% } %>
+      </div>
+    <% } %>
 
-        <div class="form-group">
-          <label for="zip_code">Zip Code</label>
-          <input type="text" id="zip_code" name="zip_code" required>
-        </div>
+    <% if (toolId || skillId) { %>
+      <div class="card">
+        <p class="meta">
+          Creating a listing from your
+          <strong><%= selectedType %></strong>:
+          <%= selectedItem.name %>
+        </p>
 
-        <div class="actions">
-          <button type="submit">Post</button>
-        </div>
-      </form>
-    </div>
+        <form action="/listings" method="POST" class="stack">
+          <input type="hidden" name="type" value="<%= selectedType %>">
+
+          <% if (toolId) { %>
+            <input type="hidden" name="tool_id" value="<%= toolId %>">
+          <% } %>
+
+          <% if (skillId) { %>
+            <input type="hidden" name="skill_id" value="<%= skillId %>">
+          <% } %>
+
+          <div class="form-group">
+            <label for="title">Title</label>
+            <input
+              type="text"
+              id="title"
+              name="title"
+              value="<%= formData.title %>"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="description">Description</label>
+            <textarea
+              id="description"
+              name="description"
+              rows="4"
+              required
+            ><%= formData.description %></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="category">Category</label>
+            <input
+              type="text"
+              id="category"
+              name="category"
+              value="<%= formData.category %>"
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="availability">Availability</label>
+            <input
+              type="text"
+              id="availability"
+              name="availability"
+              value="<%= formData.availability %>"
+              placeholder="Example: Weekends, evenings, flexible"
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="zip_code">Zip Code</label>
+            <input
+              type="text"
+              id="zip_code"
+              name="zip_code"
+              value="<%= formData.zip_code %>"
+              required
+            >
+          </div>
+
+          <button class="btn" type="submit">Create Listing</button>
+        </form>
+      </div>
+    <% } %>
   </div>
 </body>
 </html>

@@ -1,5 +1,3 @@
-<%# This file defines the EJS template for the "Register" page, which includes a form for users to create a new account. The form captures the user's name, email, password, bio, and zip code. The page also includes a link to the login page for users who already have an account. The top navigation bar includes a link to the home page. %>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,13 +9,17 @@
   <div class="topbar">
     <div class="brand">The Commons</div>
     <div class="nav-actions">
-        <a class="btn secondary" href="/">Home</a>
-      </div>
+      <a class="btn secondary" href="/">Home</a>
+    </div>
   </div>
 
-  <div class="smallpage">
-    <div class="card" style="max-width: 500px; margin: 0 auto;">
+  <div class="register-page">
+    <!-- Left Side: Registration Form -->
+    <div class="card register-card">
       <h1>Create Account</h1>
+      <p class="meta">
+        Join The Commons to share tools, offer skills, and connect with your local community.
+      </p>
 
       <form action="/users/register" method="POST">
 
@@ -38,7 +40,7 @@
 
         <div class="form-group">
           <label for="bio">Bio</label>
-          <textarea id="bio" name="bio" rows="4"></textarea>
+          <textarea id="bio" name="bio" rows="4" placeholder="Tell your community a little about yourself"></textarea>
         </div>
 
         <div class="form-group">
@@ -53,6 +55,36 @@
 
       <p>Already have an account?</p>
       <a href="/users/login">Login here</a>
+    </div>
+
+    <!-- Right Side: Simple Intro Steps -->
+    <div class="card register-info-card">
+      <h2>How It Works</h2>
+      <p class="meta">
+        The Commons helps people share tools and skills with their local community in a simple, intentional way.
+      </p>
+
+      <div class="stack register-steps">
+        <div class="step-item">
+          <p class="step-title">1. Create an Account</p>
+          <p class="meta">Set up your profile so others can learn a little about you.</p>
+        </div>
+
+        <div class="step-item">
+          <p class="step-title">2. Build Your Inventory</p>
+          <p class="meta">Add tools you own and skills you are willing to share.</p>
+        </div>
+
+        <div class="step-item">
+          <p class="step-title">3. Create Listings</p>
+          <p class="meta">Choose items from your inventory and make them available to others.</p>
+        </div>
+
+        <div class="step-item">
+          <p class="step-title">4. Share and Collaborate</p>
+          <p class="meta">Receive requests, complete exchanges, and build trust through reviews.</p>
+        </div>
+      </div>
     </div>
   </div>
 

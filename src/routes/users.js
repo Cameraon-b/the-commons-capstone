@@ -130,11 +130,48 @@ router.get('/:id', async (req, res) => {
       [id]
     );
 
+    const toolsResult = await pool.query(
+      `
+      SELECT *
+      FROM tools
+      WHERE user_id = $1
+      ORDER BY created_at DESC
+      `,
+      [id]
+    );
+
+    const skillsResult = await pool.query(
+      `
+      SELECT *
+      FROM skills
+      WHERE user_id = $1
+      ORDER BY created_at DESC
+      `,
+      [id]
+    );
+
+    const listingsResult = await pool.query(
+      `
+      SELECT *
+      FROM listings
+      WHERE user_id = $1
+      ORDER BY created_at DESC
+      `,
+      [id]
+    );
+
+    const allListings = listingsResult.rows;
+    const tools = allListings.filter(listing => listing.type === 'tool');
+    const skills = allListings.filter(listing => listing.type === 'skill');
+
     res.render('profile', {
       user: userResult.rows[0],
       reviews: reviewsResult.rows,
       averageRating: avgResult.rows[0].average_rating,
-      reviewCount: avgResult.rows[0].review_count
+      reviewCount: avgResult.rows[0].review_count,
+      tools: toolsResult.rows,
+      skills: skillsResult.rows,
+      listings: listingsResult.rows
     });
   } catch (err) {
     console.error(err);

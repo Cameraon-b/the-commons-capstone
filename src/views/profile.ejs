@@ -1,5 +1,3 @@
-<%# This file defines the EJS template for the "Profile" page, which displays the user's profile information, including their name, email, bio, zip code, join date, and placeholders for rating and completed exchanges. The page also includes sections for the user's tools and skills, which are currently placeholders. The top navigation bar includes links to the home page, listings page, requests page, and user profile. %>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -20,6 +18,7 @@
 
     <h1 class="section-title">My Profile</h1>
 
+    <!-- Profile Info Card -->
     <div class="card">
       <h2><%= user.name %></h2>
 
@@ -27,15 +26,16 @@
       <p><strong>About:</strong> <%= user.bio || 'No bio yet.' %></p>
       <p><strong>Zip Code:</strong> <%= user.zip_code || 'Not provided' %></p>
       <p class="meta"><strong>Joined:</strong> <%= user.created_at %></p>
+    </div>
 
-      <hr />
+    <!-- Reviews Card -->
+    <div class="card" style="margin-top: 20px;">
+      <h3>Community Reputation</h3>
 
       <p><strong>Rating:</strong> <%= averageRating || 'No rating yet' %></p>
       <p><strong>Total Reviews:</strong> <%= reviewCount %></p>
-    </div>
 
-    <div class="card" style="margin-top: 20px;">
-      <h3>Recent Reviews</h3>
+      <hr />
 
       <% if (reviews.length === 0) { %>
         <p class="meta">No reviews yet.</p>
@@ -46,6 +46,87 @@
               <p><strong><%= review.rating %>/5</strong> from <%= review.reviewer_name %></p>
               <p><%= review.comment %></p>
               <p class="meta"><%= review.created_at %></p>
+            </div>
+          <% }) %>
+        </div>
+      <% } %>
+    </div>
+
+    <!-- Tools Card -->
+    <div class="card" style="margin-top: 20px;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h3>My Tools</h3>
+        <a class="btn" href="/tools/new">+ Add Tool</a>
+      </div>
+
+      <% if (tools.length === 0) { %>
+        <p class="meta">No tools added yet.</p>
+      <% } else { %>
+        <div class="stack">
+          <% tools.forEach(tool => { %>
+            <div class="card" style="background:#f8f8f8;">
+              <p><strong><%= tool.name %></strong></p>
+              <p><strong>Category:</strong> <%= tool.category || 'Uncategorized' %></p>
+              <p><strong>Description:</strong> <%= tool.description || 'No description provided.' %></p>
+
+              <div style="margin-top: 10px; display:flex; gap:10px; align-items:center;">
+                <a class="btn" href="/listings/create?tool_id=<%= tool.tool_id %>">Create Listing</a>
+
+                <form action="/tools/<%= tool.tool_id %>/delete" method="POST" onsubmit="return confirm('Delete this tool?');">
+                  <button class="btn secondary" type="submit">Delete</button>
+                </form>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      <% } %>
+    </div>
+
+    <!-- Skills Card -->
+    <div class="card" style="margin-top: 20px;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h3>My Skills</h3>
+        <a class="btn" href="/skills/new">+ Add Skill</a>
+      </div>
+
+      <% if (skills.length === 0) { %>
+        <p class="meta">No skills added yet.</p>
+      <% } else { %>
+        <div class="stack">
+          <% skills.forEach(skill => { %>
+            <div class="card" style="background:#f8f8f8;">
+              <p><strong><%= skill.name %></strong></p>
+              <p><strong>Category:</strong> <%= skill.category || 'Uncategorized' %></p>
+              <p><strong>Description:</strong> <%= skill.description || 'No description provided.' %></p>
+
+              <div style="margin-top: 10px; display:flex; gap:10px; align-items:center;">
+                <a class="btn" href="/listings/create?skill_id=<%= skill.skill_id %>">Create Listing</a>
+
+                <form action="/skills/<%= skill.skill_id %>/delete" method="POST" onsubmit="return confirm('Delete this skill?');">
+                  <button class="btn secondary" type="submit">Delete</button>
+                </form>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      <% } %>
+    </div>
+
+    <!-- Listings Card -->
+    <div class="card" style="margin-top: 20px;">
+      <h3>My Listings</h3>
+
+      <% if (listings.length === 0) { %>
+        <p class="meta">No listings yet.</p>
+      <% } else { %>
+        <div class="stack">
+          <% listings.forEach(listing => { %>
+            <div class="card" style="background:#f8f8f8;">
+              <p><strong><%= listing.title %></strong></p>
+              <p><strong>Type:</strong> <%= listing.type %></p>
+              <p><strong>Category:</strong> <%= listing.category || 'Uncategorized' %></p>
+              <p><strong>Status:</strong> <%= listing.status %></p>
+              <p><strong>Availability:</strong> <%= listing.availability || 'Not specified' %></p>
             </div>
           <% }) %>
         </div>

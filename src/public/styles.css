@@ -8,7 +8,7 @@
 }
 
 body {
-  font-family: 'Playfair Display',a , serif;
+  font-family: 'Playfair Display', serif;
   background:#f0efef;
   margin: 0;
   color: #111;
@@ -280,6 +280,52 @@ hr {
 
 @media (max-width: 900px) {
   .filter-form {
+    grid-template-columns: 1fr;
+  }
+}
+
+.register-page {
+  max-width: 1100px;
+  margin: 24px auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.register-card,
+.register-info-card {
+  min-height: 100%;
+}
+
+.register-info-card {
+  background: #f8f8fb;
+  border: 1px solid #d9d6ee;
+}
+
+.register-steps {
+  margin-top: 20px;
+}
+
+.step-item {
+  padding-bottom: 14px;
+  border-bottom: 1px solid #ddd;
+}
+
+.step-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.step-title {
+  margin: 0 0 6px 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #2d1e81;
+}
+
+@media (max-width: 900px) {
+  .register-page {
     grid-template-columns: 1fr;
   }
 }

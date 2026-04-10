@@ -1,12 +1,9 @@
-// This file defines the Express router for handling listing-related routes, including viewing all listings, creating a new listing, viewing a specific listing, and sending a request for a listing. It interacts with the PostgreSQL database to manage listing data and uses EJS templates to render the appropriate views for each route. The router includes error handling for common issues such as unauthorized access and database errors.
-
-
 const express = require('express');
 const router = express.Router();
 const pool = require('../config/db');
 const zipcodes = require('zipcodes');
 
-
+// GET /listings
 router.get('/', async (req, res) => {
   try {
     const { zip_code, radius, category, type } = req.query;
@@ -67,9 +64,7 @@ router.get('/', async (req, res) => {
       currentRadius: radius || '',
       currentCategory: category || '',
       currentType: type || ''
-
     });
-
   } catch (err) {
     console.error(err);
     res.send('Error loading listings');
@@ -77,7 +72,7 @@ router.get('/', async (req, res) => {
 });
 
 // GET /listings/create
-router.get('/create', (req, res) => {
+router.get('/create', async (req, res) => {
   if (!req.currentUserId) {
     return res.render('message', {
       title: 'Login Required',
@@ -87,7 +82,115 @@ router.get('/create', (req, res) => {
     });
   }
 
-  res.render('create-listing');
+  let { tool_id, skill_id, inventory_item } = req.query;
+
+  if (inventory_item) {
+    const [itemType, itemId] = inventory_item.split(':');
+
+    if (itemType === 'tool') {
+      tool_id = itemId;
+    } else if (itemType === 'skill') {
+      skill_id = itemId;
+    }
+  }
+
+  try {
+    let selectedItem = null;
+    let selectedType = '';
+    let formData = {
+      title: '',
+      description: '',
+      category: '',
+      zip_code: '',
+      availability: ''
+    };
+
+    const userResult = await pool.query(
+      'SELECT zip_code FROM users WHERE user_id = $1',
+      [req.currentUserId]
+    );
+
+    const userZip = userResult.rows.length > 0 ? userResult.rows[0].zip_code : '';
+
+    const toolsResult = await pool.query(
+      'SELECT * FROM tools WHERE user_id = $1 ORDER BY created_at DESC',
+      [req.currentUserId]
+    );
+
+    const skillsResult = await pool.query(
+      'SELECT * FROM skills WHERE user_id = $1 ORDER BY created_at DESC',
+      [req.currentUserId]
+    );
+
+    const tools = toolsResult.rows;
+    const skills = skillsResult.rows;
+
+    if (tool_id) {
+      const toolResult = await pool.query(
+        'SELECT * FROM tools WHERE tool_id = $1 AND user_id = $2',
+        [tool_id, req.currentUserId]
+      );
+
+      if (toolResult.rows.length === 0) {
+        return res.render('message', {
+          title: 'Tool Not Found',
+          message: 'That tool could not be found in your inventory.',
+          actionText: 'Back to Profile',
+          actionHref: `/users/${req.currentUserId}`
+        });
+      }
+
+      selectedItem = toolResult.rows[0];
+      selectedType = 'tool';
+
+      formData = {
+        title: selectedItem.name,
+        description: selectedItem.description || '',
+        category: selectedItem.category || '',
+        zip_code: userZip || '',
+        availability: ''
+      };
+    } else if (skill_id) {
+      const skillResult = await pool.query(
+        'SELECT * FROM skills WHERE skill_id = $1 AND user_id = $2',
+        [skill_id, req.currentUserId]
+      );
+
+      if (skillResult.rows.length === 0) {
+        return res.render('message', {
+          title: 'Skill Not Found',
+          message: 'That skill could not be found in your profile.',
+          actionText: 'Back to Profile',
+          actionHref: `/users/${req.currentUserId}`
+        });
+      }
+
+      selectedItem = skillResult.rows[0];
+      selectedType = 'skill';
+
+      formData = {
+        title: selectedItem.name,
+        description: selectedItem.description || '',
+        category: selectedItem.category || '',
+        zip_code: userZip || '',
+        availability: ''
+      };
+    }
+
+    res.render('create-listing', {
+      selectedType,
+      selectedItem,
+      formData,
+      toolId: tool_id || '',
+      skillId: skill_id || '',
+      currentUserId: req.currentUserId,
+      tools,
+      skills
+    });
+  } catch (err) {
+    console.error(err);
+    res.send('Error loading listing form');
+  }
 });
 
 // GET /listings/:id
@@ -158,7 +261,6 @@ router.post('/:id/request', async (req, res) => {
 
     const listing = listingResult.rows[0];
 
-    // prevent requesting your own listing
     if (listing.user_id === req.currentUserId) {
       return res.render('message', {
         title: 'Action Not Allowed',
@@ -211,6 +313,8 @@ router.post('/', async (req, res) => {
   }
 
   const {
+    tool_id,
+    skill_id,
     title,
     description,
     type,
@@ -220,21 +324,78 @@ router.post('/', async (req, res) => {
   } = req.body;
 
   try {
-    await pool.query(
-      `INSERT INTO listings
-      (user_id, type, title, description, category, availability, zip_code, status)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
-      [
-        req.currentUserId,
-        type,
-        title,
-        description,
-        category,
-        availability,
-        zip_code,
-        'available'
-      ]
-    );
+    if (type === 'tool') {
+      const toolResult = await pool.query(
+        'SELECT * FROM tools WHERE tool_id = $1 AND user_id = $2',
+        [tool_id, req.currentUserId]
+      );
+
+      if (toolResult.rows.length === 0) {
+        return res.render('message', {
+          title: 'Tool Not Found',
+          message: 'You can only create listings from tools in your own inventory.',
+          actionText: 'Back to Profile',
+          actionHref: `/users/${req.currentUserId}`
+        });
+      }
+
+      await pool.query(
+        `INSERT INTO listings
+        (user_id, tool_id, skill_id, type, title, description, category, availability, zip_code, status)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
+        [
+          req.currentUserId,
+          tool_id,
+          null,
+          'tool',
+          title,
+          description,
+          category,
+          availability,
+          zip_code,
+          'available'
+        ]
+      );
+    } else if (type === 'skill') {
+      const skillResult = await pool.query(
+        'SELECT * FROM skills WHERE skill_id = $1 AND user_id = $2',
+        [skill_id, req.currentUserId]
+      );
+
+      if (skillResult.rows.length === 0) {
+        return res.render('message', {
+          title: 'Skill Not Found',
+          message: 'You can only create listings from skills in your own profile.',
+          actionText: 'Back to Profile',
+          actionHref: `/users/${req.currentUserId}`
+        });
+      }
+
+      await pool.query(
+        `INSERT INTO listings
+        (user_id, tool_id, skill_id, type, title, description, category, availability, zip_code, status)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
+        [
+          req.currentUserId,
+          null,
+          skill_id,
+          'skill',
+          title,
+          description,
+          category,
+          availability,
+          zip_code,
+          'available'
+        ]
+      );
+    } else {
+      return res.render('message', {
+        title: 'Invalid Listing Type',
+        message: 'Listings must come from either a tool or a skill.',
+        actionText: 'Back to Profile',
+        actionHref: `/users/${req.currentUserId}`
+      });
+    }
 
     res.redirect('/listings');
   } catch (err) {
