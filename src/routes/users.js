@@ -3,6 +3,7 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../config/db');
+const bcrypt = require('bcrypt');
 
 // GET /users/register
 router.get('/register', (req, res) => {
@@ -14,10 +15,12 @@ router.post('/register', async (req, res) => {
   const { name, email, password, bio, zip_code } = req.body;
 
   try {
+  const passwordHash = await bcrypt.hash(password, 10);
+
     await pool.query(
       `INSERT INTO users (name, email, password_hash, bio, zip_code)
        VALUES ($1, $2, $3, $4, $5)`,
-      [name, email, password, bio, zip_code]
+      [name, email, passwordHash, bio, zip_code]
     );
 
     res.redirect('/users');
@@ -59,7 +62,9 @@ router.post('/login', async (req, res) => {
 
     const user = result.rows[0];
 
-    if (user.password_hash !== password) {
+    const passwordMatch = await bcrypt.compare(password, user.password_hash);
+
+    if (!passwordMatch) {
       return res.send(`
         <h2>Incorrect password</h2>
         <a href="/users/login">Try again</a>
