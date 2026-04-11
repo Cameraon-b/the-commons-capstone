@@ -1,6 +1,6 @@
 # the-commons-capstone
 This is the repository for my Capstone Project. A web app called The Commons that empowers local communities through tool and skill sharing.
-User can create a personal inventory and offer items or services to teh community, and connect with others and build trusted networks through a rating and review system.
+User can create a personal inventory and offer items or services to the community, and connect with others and build trusted networks through a rating and review system.
 
 The goal of this project is to see how technology can support resource sharing and create more collaborative and connected communities.
 
