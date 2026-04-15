@@ -8,7 +8,7 @@
 }
 
 body {
-  font-family: 'Playfair Display', serif;
+  font-family: Georgia, 'Times New Roman', Times, serif;
   background:#f0efef;
   margin: 0;
   color: #111;
@@ -328,4 +328,25 @@ hr {
   .register-page {
     grid-template-columns: 1fr;
   }
+}
+
+.scroll-section {
+  max-height: 500px;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+.status-badge.available {
+  background: #2d1e81;
+  color: #ffffff;
+}
+
+.status-badge.in_use {
+  background: #4331a3;
+  color: #ffffff;
+}
+
+.status-badge.unavailable {
+  background: #f8d7da;
+  color: #721c24;
 }

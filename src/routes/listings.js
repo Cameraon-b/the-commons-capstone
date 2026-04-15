@@ -8,7 +8,7 @@ router.get('/', async (req, res) => {
   try {
     const { zip_code, radius, category, type } = req.query;
 
-    let conditions = [];
+    let conditions = ['LOWER(listings.status) != \'unavailable\''];
     let values = [];
     let valueIndex = 1;
 
@@ -192,6 +192,150 @@ router.get('/create', async (req, res) => {
     res.send('Error loading listing form');
   }
 });
+
+// GET /listings/:id/edit
+router.get('/:id/edit', async (req, res) => {
+  if (!req.currentUserId) {
+    return res.render('message', {
+      title: 'Login Required',
+      message: 'You must be logged in to edit a listing.',
+      actionText: 'Login',
+      actionHref: '/users/login'
+    });
+  }
+
+  const { id } = req.params;
+
+  try {
+    const result = await pool.query(`
+      SELECT * FROM listings WHERE listing_id = $1
+    `, [id]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).send('Listing not found');
+    }
+
+    const listing = result.rows[0];
+
+    if (listing.user_id !== req.currentUserId) {
+      return res.status(403).send('You cannot edit this listing.');
+    }
+
+    res.render('edit-listing', {
+      listing
+    });
+  } catch (err) {
+    console.error(err);
+    res.send('Error loading listing edit form');
+  }
+});
+
+// POST /listings/:id/edit
+router.post('/:id/edit', async (req, res) => {
+  if (!req.currentUserId) {
+    return res.render('message', {
+      title: 'Login Required',
+      message: 'You must be logged in to edit a listing.',
+      actionText: 'Login',
+      actionHref: '/users/login'
+    });
+  }
+
+  const { id } = req.params;
+  const { 
+    title, 
+    description, 
+    category, 
+    availability, 
+    zip_code,
+    status  
+  } = req.body;
+
+  try {
+    const result = await pool.query(`
+      SELECT * FROM listings WHERE listing_id = $1
+    `, [id]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).send('Listing not found');
+    }
+
+    const listing = result.rows[0];
+
+    if (listing.user_id !== req.currentUserId) {
+      return res.status(403).send('You cannot edit this listing.');
+    }
+
+    await pool.query(`
+      UPDATE listings
+      SET title = $1, 
+          description = $2, 
+          category = $3, 
+          availability = $4, 
+          zip_code = $5,
+          status = $6
+      WHERE listing_id = $7
+    `, [title, description, category, availability, zip_code, status, id]);
+
+    res.redirect(`/users/${req.currentUserId}`);
+  } catch (err) {
+    console.error(err);
+    res.send('Error updating listing');
+  }
+});
+
+// POST /listings/:id/delete
+router.post('/:id/delete', async (req, res) => {
+  if (!req.currentUserId) {
+    return res.render('message', {
+      title: 'Login Required',
+      message: 'You must be logged in to delete a listing.',
+      actionText: 'Login',
+      actionHref: '/users/login'
+    });
+  }
+
+  const { id } = req.params;
+
+  try {
+    const result = await pool.query(`
+      SELECT * FROM listings WHERE listing_id = $1
+    `, [id]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).send('Listing not found');
+    }
+
+    const listing = result.rows[0];
+
+    if (listing.user_id !== req.currentUserId) {
+      return res.status(403).send('You cannot delete this listing.');
+    }
+
+    const requestCheck = await pool.query(`
+      SELECT request_id FROM requests WHERE listing_id = $1 LIMIT 1
+    `, [id]);
+
+    if (requestCheck.rows.length > 0) {
+      return res.render('message', {
+        title: 'Cannot Delete Listing',
+        message: 'This listing has request history and cannot be deleted.',
+        actionText: 'Back to Profile',
+        actionHref: `/users/${req.currentUserId}`
+      });
+    }
+
+    await pool.query(`
+      DELETE FROM listings WHERE listing_id = $1
+    `, [id]);
+
+    res.redirect(`/users/${req.currentUserId}`);
+  } catch (err) {
+    console.error(err);
+    res.send('Error deleting listing');
+  }
+});
+
 
 // GET /listings/:id
 router.get('/:id', async (req, res) => {

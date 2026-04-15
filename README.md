@@ -45,11 +45,6 @@ Current focus is on:
 The docs/ folder contains design materials such as wireframes, diagrams, and schema.
 
 ## Development Notes
-AI tools (ChatGPT and GitHub Copilot) were used as support resources during development for:
-
-- generating initial code examples  
-- debugging and troubleshooting  
-- exploring UI/UX and architectural decisions  
-
-All code was reviewed, modified, and integrated manually.
+AI tools (ChatGPT and GitHub Copilot) were used as support resources during development for generating 
+initial code examples debugging and troubleshooting exploring UI/UX and architectural decisions.
 

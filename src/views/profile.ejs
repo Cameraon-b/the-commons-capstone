@@ -40,7 +40,7 @@
       <% if (reviews.length === 0) { %>
         <p class="meta">No reviews yet.</p>
       <% } else { %>
-        <div class="stack">
+        <div class="stack scroll-section">
           <% reviews.forEach(review => { %>
             <div class="card" style="background:#f8f8f8;">
               <p><strong><%= review.rating %>/5</strong> from <%= review.reviewer_name %></p>
@@ -62,7 +62,7 @@
       <% if (tools.length === 0) { %>
         <p class="meta">No tools added yet.</p>
       <% } else { %>
-        <div class="stack">
+        <div class="stack scroll-section">
           <% tools.forEach(tool => { %>
             <div class="card" style="background:#f8f8f8;">
               <p><strong><%= tool.name %></strong></p>
@@ -92,7 +92,7 @@
       <% if (skills.length === 0) { %>
         <p class="meta">No skills added yet.</p>
       <% } else { %>
-        <div class="stack">
+        <div class="stack scroll-section">
           <% skills.forEach(skill => { %>
             <div class="card" style="background:#f8f8f8;">
               <p><strong><%= skill.name %></strong></p>
@@ -114,19 +114,34 @@
 
     <!-- Listings Card -->
     <div class="card" style="margin-top: 20px;">
-      <h3>My Listings</h3>
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h3>My Listings</h3>
+      </div>
 
       <% if (listings.length === 0) { %>
         <p class="meta">No listings yet.</p>
       <% } else { %>
-        <div class="stack">
+        <div class="stack scroll-section">
           <% listings.forEach(listing => { %>
             <div class="card" style="background:#f8f8f8;">
               <p><strong><%= listing.title %></strong></p>
               <p><strong>Type:</strong> <%= listing.type %></p>
               <p><strong>Category:</strong> <%= listing.category || 'Uncategorized' %></p>
-              <p><strong>Status:</strong> <%= listing.status %></p>
+              <p>
+                <strong>Status:</strong> 
+                <span class="status-badge <%= listing.status %>">
+                <%= listing.status %>
+                </span>
+              </p>
               <p><strong>Availability:</strong> <%= listing.availability || 'Not specified' %></p>
+
+              <div style="margin-top: 10px; display:flex; gap:10px; align-items:center;">
+                <a class="btn" href="/listings/<%= listing.listing_id %>/edit">Edit</a>
+
+                <form action="/listings/<%= listing.listing_id %>/delete" method="POST" onsubmit="return confirm('Delete this listing?');">
+                  <button class="btn secondary" type="submit">Delete</button>
+                </form>
+              </div>
             </div>
           <% }) %>
         </div>

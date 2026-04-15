@@ -93,7 +93,9 @@
             Type: <%= listing.type %> |
             Category: <%= listing.category %> |
             Availability: <%= listing.availability %> |
-            Status: <%= listing.status %>
+            <span class="status-badge <%= listing.status %>">
+              <%= listing.status %>
+            </span>
           </p>
 
           <% if (listing.distance !== undefined) { %>
