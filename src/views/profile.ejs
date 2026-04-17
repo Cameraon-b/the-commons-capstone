@@ -130,7 +130,7 @@
               <p>
                 <strong>Status:</strong> 
                 <span class="status-badge <%= listing.status %>">
-                <%= listing.status %>
+                <%= listing.status.replace('_', ' ').toUpperCase() %>
                 </span>
               </p>
               <p><strong>Availability:</strong> <%= listing.availability || 'Not specified' %></p>

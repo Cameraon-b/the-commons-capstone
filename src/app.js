@@ -13,6 +13,8 @@ const requestsRoutes = require("./routes/requests");
 const reviewsRoutes = require("./routes/reviews");
 const toolRoutes = require('./routes/tools');
 const skillRoutes = require('./routes/skills');
+const notificationsRoutes = require('./routes/notifications');
+const attachNotificationCount = require('./middleware/notificationCount');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -35,6 +37,8 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(attachNotificationCount);
+
 // view engine
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -50,7 +54,8 @@ app.use("/requests", requestsRoutes);
 app.use("/reviews", reviewsRoutes);
 app.use("/tools", toolRoutes);
 app.use("/skills", skillRoutes);
-
+app.use("/notifications", notificationsRoutes);
 app.listen(PORT, () => {
   console.log(`Commons running on http://localhost:${PORT}`);
 });
+

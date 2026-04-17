@@ -1,5 +1,3 @@
-// This file defines the Express router for handling request-related routes, including viewing incoming and outgoing requests, accepting requests, and declining requests. It interacts with the PostgreSQL database to manage request data and uses EJS templates to render the appropriate views for each route. The router includes error handling for common issues such as unauthorized access and database errors.
-
 const express = require('express');
 const router = express.Router();
 const pool = require('../config/db');
@@ -82,7 +80,7 @@ router.post('/:id/accept', async (req, res) => {
   const { id } = req.params;
 
   try {
-    // First get the request so we know which listing it belongs to
+    // Get request first
     const requestResult = await pool.query(
       'SELECT * FROM requests WHERE request_id = $1 AND owner_id = $2',
       [id, req.currentUserId]
@@ -93,6 +91,18 @@ router.post('/:id/accept', async (req, res) => {
     }
 
     const request = requestResult.rows[0];
+
+    // Get listing for title
+    const listingResult = await pool.query(
+      'SELECT * FROM listings WHERE listing_id = $1',
+      [request.listing_id]
+    );
+
+    if (listingResult.rows.length === 0) {
+      return res.send('Listing not found');
+    }
+
+    const listing = listingResult.rows[0];
 
     // Update request status
     await pool.query(
@@ -108,10 +118,25 @@ router.post('/:id/accept', async (req, res) => {
     await pool.query(
       `
       UPDATE listings
-      SET status = 'in use', updated_at = NOW()
+      SET status = 'in_use', updated_at = NOW()
       WHERE listing_id = $1
       `,
       [request.listing_id]
+    );
+
+    // Notify requester
+    await pool.query(
+      `
+      INSERT INTO notifications (user_id, request_id, type, message, link)
+      VALUES ($1, $2, $3, $4, $5)
+      `,
+      [
+        request.requester_id,
+        request.request_id,
+        'accepted_request',
+        `Your request for ${listing.title} was accepted.`,
+        '/requests'
+      ]
     );
 
     res.redirect('/requests');
@@ -135,6 +160,31 @@ router.post('/:id/decline', async (req, res) => {
   const { id } = req.params;
 
   try {
+    // Get request first
+    const requestResult = await pool.query(
+      'SELECT * FROM requests WHERE request_id = $1 AND owner_id = $2',
+      [id, req.currentUserId]
+    );
+
+    if (requestResult.rows.length === 0) {
+      return res.send('Request not found');
+    }
+
+    const request = requestResult.rows[0];
+
+    // Get listing for title
+    const listingResult = await pool.query(
+      'SELECT * FROM listings WHERE listing_id = $1',
+      [request.listing_id]
+    );
+
+    if (listingResult.rows.length === 0) {
+      return res.send('Listing not found');
+    }
+
+    const listing = listingResult.rows[0];
+
+    // Update request status
     await pool.query(
       `
       UPDATE requests
@@ -142,6 +192,21 @@ router.post('/:id/decline', async (req, res) => {
       WHERE request_id = $1 AND owner_id = $2
       `,
       [id, req.currentUserId]
+    );
+
+    // Notify requester
+    await pool.query(
+      `
+      INSERT INTO notifications (user_id, request_id, type, message, link)
+      VALUES ($1, $2, $3, $4, $5)
+      `,
+      [
+        request.requester_id,
+        request.request_id,
+        'declined_request',
+        `Your request for ${listing.title} was declined.`,
+        '/requests'
+      ]
     );
 
     res.redirect('/requests');
@@ -177,6 +242,18 @@ router.post('/:id/complete', async (req, res) => {
 
     const request = requestResult.rows[0];
 
+    // Get listing for title
+    const listingResult = await pool.query(
+      'SELECT * FROM listings WHERE listing_id = $1',
+      [request.listing_id]
+    );
+
+    if (listingResult.rows.length === 0) {
+      return res.send('Listing not found');
+    }
+
+    const listing = listingResult.rows[0];
+
     // Update request status
     await pool.query(
       `
@@ -195,6 +272,21 @@ router.post('/:id/complete', async (req, res) => {
       WHERE listing_id = $1
       `,
       [request.listing_id]
+    );
+
+    // Notify requester
+    await pool.query(
+      `
+      INSERT INTO notifications (user_id, request_id, type, message, link)
+      VALUES ($1, $2, $3, $4, $5)
+      `,
+      [
+        request.requester_id,
+        request.request_id,
+        'completed_request',
+        `Your exchange for ${listing.title} was marked complete.`,
+        '/requests'
+      ]
     );
 
     res.redirect('/requests');

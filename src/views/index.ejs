@@ -15,6 +15,12 @@
         <% if (currentUserId) { %>
 
           <form action="/users/logout" method="POST" class="inline-form">
+            <a class="btn secondary notif-button" href="/notifications">
+              Notifications
+              <% if ((typeof notificationCount !== 'undefined' ? notificationCount : 0) > 0) { %>
+                <span class="notif-badge"><%= notificationCount %></span>
+              <% } %>
+            </a>
             <button type="submit">Logout</button>
           </form>
         <% } else { %>

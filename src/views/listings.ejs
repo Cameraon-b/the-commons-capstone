@@ -82,7 +82,7 @@
 
     <div class="stack">
       <% listings.forEach(listing => { %>
-        <div class="card">
+        <div class="card-hover">
           <div class="listing-card-title">
             <a href="/listings/<%= listing.listing_id %>"><%= listing.title %></a>
           </div>
@@ -94,7 +94,7 @@
             Category: <%= listing.category %> |
             Availability: <%= listing.availability %> |
             <span class="status-badge <%= listing.status %>">
-              <%= listing.status %>
+              <%= listing.status.replace('_', ' ').toUpperCase() %>
             </span>
           </p>
 

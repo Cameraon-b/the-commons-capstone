@@ -423,10 +423,11 @@ router.post('/:id/request', async (req, res) => {
       });
     }
 
-    await pool.query(
+    const requestInsert = await pool.query(
       `INSERT INTO requests
       (listing_id, requester_id, owner_id, request_message, contact_method, contact_value, status)
-      VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+      VALUES ($1, $2, $3, $4, $5, $6, $7)
+      RETURNING request_id`,
       [
         listing.listing_id,
         req.currentUserId,
@@ -435,6 +436,20 @@ router.post('/:id/request', async (req, res) => {
         contact_method,
         contact_value,
         'pending'
+      ]
+    );
+
+    const newRequestId = requestInsert.rows[0].request_id;
+
+    await pool.query(
+      `INSERT INTO notifications (user_id, request_id, type, message, link)
+      VALUES ($1, $2, $3, $4, $5)`,
+      [
+        listing.user_id,
+        newRequestId,
+        'new_request',
+        `You received a new request for ${listing.title}.`,
+        '/requests'
       ]
     );
 

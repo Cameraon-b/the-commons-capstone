@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Notifications</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="page">
+    <div class="topbar">
+      <div class="brand">The Commons</div>
+
+      <div class="nav-actions">
+        <a class="btn secondary" href="/">Home</a>
+        <a class="btn secondary" href="/listings">Listings</a>
+        <a class="btn secondary" href="/requests">Requests</a>
+        <a class="btn secondary" href="/users/<%= currentUserId %>">Profile</a>
+      </div>
+    </div>
+
+    <div style="display:flex; justify-content:space-between; align-items:center; gap: 12px; flex-wrap: wrap;">
+      <h1 class="section-title">Notifications</h1>
+
+      <% if ((unreadNotifications.length + readNotifications.length) > 0) { %>
+        <form action="/notifications/read-all" method="POST">
+          <button class="btn secondary" type="submit">Mark All Read</button>
+        </form>
+      <% } %>
+    </div>
+
+    <% if ((unreadNotifications.length + readNotifications.length) === 0) { %>
+      <div class="card">
+        <p class="meta">No notifications yet.</p>
+      </div>
+    <% } else { %>
+      <div class="notifications-grid">
+        
+        <div class="card">
+          <h2 class="section-subtitle">Unread</h2>
+
+          <% if (unreadNotifications.length === 0) { %>
+            <p class="meta">No unread notifications.</p>
+          <% } else { %>
+            <div class="stack">
+              <% unreadNotifications.forEach(notification => { %>
+                <div class="notification-item unread">
+                  <p>
+                    <a href="/notifications/<%= notification.notification_id %>/open" class="notification-link">
+                      <strong><%= notification.message %></strong>
+                    </a>
+                  </p>
+                  <p class="meta">
+                    Type: <%= notification.type.replace(/_/g, ' ') %>
+                  </p>
+                  <p class="meta">
+                    <%= notification.created_at %>
+                  </p>
+
+                  <form action="/notifications/<%= notification.notification_id %>/read" method="POST" style="margin-top: 10px;">
+                    <button class="btn secondary" type="submit">Mark Read</button>
+                  </form>
+                </div>
+              <% }) %>
+            </div>
+          <% } %>
+        </div>
+
+        <div class="card">
+          <h2 class="section-subtitle">Read</h2>
+
+          <% if (readNotifications.length === 0) { %>
+            <p class="meta">No read notifications yet.</p>
+          <% } else { %>
+            <div class="stack">
+              <% readNotifications.forEach(notification => { %>
+                <div class="notification-item read">
+                  <p>
+                    <a href="/notifications/<%= notification.notification_id %>/open" class="notification-link">
+                      <strong><%= notification.message %></strong>
+                    </a>
+                  </p>
+                  <p class="meta">
+                    Type: <%= notification.type.replace(/_/g, ' ') %>
+                  </p>
+                  <p class="meta">
+                    <%= notification.created_at %>
+                  </p>
+                </div>
+              <% }) %>
+            </div>
+          <% } %>
+        </div>
+
+      </div>
+    <% } %>
+  </div>
+</body>
+</html>
