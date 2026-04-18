@@ -1,3 +1,5 @@
+// routes/listings.js - Handles all routes related to listings, including viewing, creating, editing, and requesting listings.
+
 const express = require('express');
 const router = express.Router();
 const pool = require('../config/db');
@@ -56,6 +58,8 @@ router.get('/', async (req, res) => {
           distance
         };
       });
+
+      listings.sort((a, b) => a.distance - b.distance);
     }
 
     res.render('listings', {

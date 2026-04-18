@@ -1,3 +1,5 @@
+<!-- views/notifications.ejs - EJS template for the "Notifications" page, which displays a list of unread and read notifications for the current user. Users can mark notifications as read or view the details of a notification. The top navigation bar includes links to the home page, listings page, requests page, and user profile. -->
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -40,7 +42,7 @@
           <% if (unreadNotifications.length === 0) { %>
             <p class="meta">No unread notifications.</p>
           <% } else { %>
-            <div class="stack">
+            <div class="stack scroll-section">
               <% unreadNotifications.forEach(notification => { %>
                 <div class="notification-item unread">
                   <p>
@@ -70,7 +72,7 @@
           <% if (readNotifications.length === 0) { %>
             <p class="meta">No read notifications yet.</p>
           <% } else { %>
-            <div class="stack">
+            <div class="stack scroll-section">
               <% readNotifications.forEach(notification => { %>
                 <div class="notification-item read">
                   <p>

@@ -1,3 +1,5 @@
+// routes/notifications.js - Handles all routes related to user notifications, including viewing, marking as read, and opening notifications.
+
 const express = require('express');
 const router = express.Router();
 const pool = require('../config/db');

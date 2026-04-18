@@ -1,3 +1,5 @@
+// routes/tools.js - Handles all routes related to user tools, including adding new tools and deleting existing tools.
+
 const express = require('express');
 const router = express.Router();
 const pool = require('../config/db');

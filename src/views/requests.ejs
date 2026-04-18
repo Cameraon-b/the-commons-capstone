@@ -1,4 +1,4 @@
-<%# This file defines the EJS template for the "Manage Requests" page, which displays incoming requests, outgoing requests, and request history for the logged-in user. The page includes sections for each type of request, showing details such as requester name, listing title, request message, contact information, and status. Users can accept or decline incoming requests directly from this page. The top navigation bar includes links to the home page, listings page, and user profile if the user is logged in. %>
+<!-- views/requests.ejs - EJS template for the "Manage Requests" page, which allows users to view and manage their incoming and outgoing requests. The page is divided into three sections: Incoming Requests, Sent Requests, and Request History. Users can accept, decline, or mark requests as complete. The top navigation bar includes links to the home page, listings page, and user profile if the user is logged in. -->
 
 <!DOCTYPE html>
 <html>
@@ -35,7 +35,7 @@
             <p>No incoming requests.</p>
           </div>
         <% } else { %>
-          <div class="stack">
+          <div class="stack scroll-section">
             <% incomingRequests.forEach(request => { %>
               <div class="card">
                 <h3>Request from: <%= request.requester_name %></h3>
@@ -79,7 +79,7 @@
             <p>No outgoing requests.</p>
           </div>
         <% } else { %>
-          <div class="stack">
+          <div class="stack scroll-section">
             <% outgoingRequests.forEach(request => { %>
               <% if (request.status === 'pending' || request.status === 'accepted') { %>
                 <div class="card">
@@ -103,7 +103,7 @@
             <p>No request history yet.</p>
           </div>
         <% } else { %>
-          <div class="stack">
+          <div class="stack scroll-section">
             <% historyRequests.forEach(request => { %>
               <div class="card">
                 <h3>

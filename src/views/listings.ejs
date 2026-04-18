@@ -1,4 +1,4 @@
-<%# This file defines the EJS template for the "Listings" page, which displays a list of all available listings in the system. Each listing shows its title, description, type, category, availability, zip code, and status. Users can click on a listing title to view its details. The page also includes navigation links to the home page, requests page, and user profile if the user is logged in. Additionally, there is a button to create a new listing. %>
+<!-- views/listings.ejs - EJS template for the "Listings" page, which displays a list of all available listings in the system. Each listing shows its title, description, type, category, availability, zip code, and status. Users can click on a listing title to view its details. The page also includes navigation links to the home page, requests page, and user profile if the user is logged in. Additionally, there is a button to create a new listing. -->
 
 <!DOCTYPE html>
 <html>
@@ -82,7 +82,7 @@
 
     <div class="stack">
       <% listings.forEach(listing => { %>
-        <div class="card-hover">
+        <div class="card-hover listing-clickable" data-link="/listings/<%= listing.listing_id %>">
           <div class="listing-card-title">
             <a href="/listings/<%= listing.listing_id %>"><%= listing.title %></a>
           </div>
@@ -107,5 +107,15 @@
       <% }) %>
     </div>
   </div>
+  <script>
+    document.querySelectorAll('.listing-clickable').forEach(card => {
+      card.addEventListener('click', (e) => {
+        // don't trigger if clicking a link or button inside
+        if (e.target.closest('a, button, form')) return;
+
+        window.location.href = card.dataset.link;
+      });
+    });
+  </script>
 </body>
 </html>

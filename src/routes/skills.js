@@ -1,3 +1,5 @@
+// routes/skills.js - Handles all routes related to user skills, including adding new skills and deleting existing skills.
+
 const express = require('express');
 const router = express.Router();
 const pool = require('../config/db');

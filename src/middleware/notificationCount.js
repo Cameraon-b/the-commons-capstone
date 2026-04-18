@@ -1,3 +1,5 @@
+// Middleware to attach the count of unread notifications to res.locals for use in templates
+
 const pool = require('../config/db');
 
 async function attachNotificationCount(req, res, next) {

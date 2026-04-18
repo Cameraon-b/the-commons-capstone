@@ -1,4 +1,4 @@
-<%# index.ejs - This is the main landing page for the web application. It serves as the entry point for users, providing an overview of the platform and guiding them to key features such as browsing listings, creating listings, managing requests, and viewing user profiles. The page dynamically adjusts its content based on whether a user is logged in or not, offering personalized greetings and relevant actions for authenticated users while encouraging new visitors to sign up or explore the platform. %>
+<!-- views/index.ejs - EJS template for the home page of The Commons, a platform for sharing tools and skills. The page includes a hero section with a welcome message and call-to-action buttons, a quote about commoning, and featured categories for browsing listings. It also conditionally displays navigation options based on whether the user is logged in or not. -->
 
 <!DOCTYPE html>
 <html>
@@ -13,12 +13,12 @@
 
       <div class="nav-actions">
         <% if (currentUserId) { %>
-
           <form action="/users/logout" method="POST" class="inline-form">
             <a class="btn secondary notif-button" href="/notifications">
               Notifications
-              <% if ((typeof notificationCount !== 'undefined' ? notificationCount : 0) > 0) { %>
-                <span class="notif-badge"><%= notificationCount %></span>
+              <% const notifCount = typeof notificationCount !== 'undefined' ? notificationCount : 0; %>
+              <% if (notifCount > 0) { %>
+                <span class="notif-badge"><%= notifCount %></span>
               <% } %>
             </a>
             <button type="submit">Logout</button>
@@ -30,13 +30,13 @@
       </div>
     </div>
 
-    <div class="card" style="text-align: center; margin-bottom: 24px;">
-      <h1 class="section-title" style="margin-bottom: 8px;">Sharing Tools. Sharing Skills.</h1>
-      <p style="font-size: 1.2rem; margin-bottom: 18px;">
+    <div class="card hero-card">
+      <h1 class="hero-title">Sharing Tools. Sharing Skills.</h1>
+      <p class="hero-subtitle">
         Building networks of mutual aid.
       </p>
 
-      <div class="actions" style="justify-content: center;">
+      <div class="actions hero-actions">
         <% if (currentUserId) { %>
           <a class="btn" href="/listings">Browse Listings</a>
           <a class="btn secondary" href="/listings/create">Create Listing</a>
@@ -48,10 +48,10 @@
     </div>
 
     <% if (currentUserId) { %>
-      <div class="card" style="margin-bottom: 24px; text-align: center;">
-        <p class="meta">Hello, <strong><%= currentUserName %></strong></p>
+      <div class="card center-card home-section">
+        <p class="meta welcome-text">Hello, <strong><%= currentUserName %></strong></p>
 
-        <div class="actions" style="justify-content: center;">
+        <div class="actions hero-actions">
           <a class="btn secondary" href="/requests">Manage Requests</a>
           <a class="btn secondary" href="/users/<%= currentUserId %>">My Profile</a>
           <a class="btn secondary" href="/tools/new">+ Add Tool</a>
@@ -61,17 +61,17 @@
       </div>
     <% } %>
 
-    <div class="card" style="margin-top: 24px; text-align: center;">
+    <div class="card center-card home-section">
       <p class="quote">
         “There is no commons without commoning—the social practices and relationships of
         working together to support one another.” — Peter Linebaugh
       </p>
     </div>
 
-    <div class="card" style="margin-top: 24px; text-align: center;">
-      <h2>Featured Categories</h2>
+    <div class="card center-card home-section">
+      <h2 class="section-subtitle">Featured Categories</h2>
 
-      <div class="actions" style="justify-content: center; flex-wrap: wrap; gap: 8px;">
+      <div class="actions hero-actions category-actions">
         <a class="btn secondary" href="/listings?category=tech">Tech</a>
         <a class="btn secondary" href="/listings?category=garden">Gardening</a>
         <a class="btn secondary" href="/listings?category=repair">Repairs</a>

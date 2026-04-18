@@ -21,9 +21,8 @@ Core MVP features are complete.
 Current focus is on:
 
 - refining user experience & workflow
-- improving listing management
-- populating realistic test data  
-- deploying the application for public access  
+- deploying the application for public access
+- testing
 
 ## Current Features
 - Registration, login, authentication
@@ -37,6 +36,11 @@ Current focus is on:
   - Accept, Decline requests
   - Complete Exchanges
   - Rating & Feedback
+- Request notifications
+  - New
+  - Accepted
+  - Declined
+  - Completed
 - Location, category & type filtering
 - Sign up page onboarding
 - Featured catagories

@@ -1,3 +1,5 @@
+// routes/requests.js - Handles all routes related to requests, including viewing incoming/outgoing requests, accepting/declining requests, and marking requests as completed.
+
 const express = require('express');
 const router = express.Router();
 const pool = require('../config/db');

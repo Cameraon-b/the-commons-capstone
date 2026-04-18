@@ -1,3 +1,5 @@
+// routes/reviews.js - Handles all routes related to leaving reviews after completed exchanges.
+
 const express = require('express');
 const router = express.Router();
 const pool = require('../config/db');
