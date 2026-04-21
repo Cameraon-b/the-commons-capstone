@@ -1,130 +1,162 @@
-// seed.js - Script to populate the database with sample data for testing and development purposes. This script creates a specified number of users, each with a few tools, skills, and listings. It uses the Faker library to generate realistic fake data and bcrypt to hash passwords before inserting them into the database.
+const { Pool } = require("pg");
+const bcrypt = require("bcrypt");
+require("dotenv").config();
 
-const pool = require('../config/db');
-const { faker } = require('@faker-js/faker');
-const bcrypt = require('bcrypt');
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false,
+  },
+});
 
-const NUM_USERS = 10;
-const TOOLS_PER_USER = 3;
-const SKILLS_PER_USER = 2;
-const LISTINGS_PER_USER = 3;
+const users = [
+  ["Alice Carter", "alice@example.com", "Friendly neighbor who loves DIY projects.", "63114"],
+  ["Marcus Reed", "marcus@example.com", "Can help with yard work and simple repairs.", "63123"],
+  ["Jenna Lewis", "jenna@example.com", "Gardener and plant lover.", "63109"],
+  ["Brian Foster", "brian@example.com", "Has extra tools and likes helping people.", "63031"],
+  ["Sofia Nguyen", "sofia@example.com", "Enjoys organizing and home improvement.", "63119"],
+  ["Daniel Brooks", "daniel@example.com", "Always working on something practical.", "63026"],
+  ["Maya Patel", "maya@example.com", "Creative and good with crafts and sewing.", "63122"],
+  ["Ethan Walker", "ethan@example.com", "Can help move furniture and do lifting.", "63044"],
+];
+
+const tools = [
+  ["Cordless Drill", "Reliable drill for home projects.", "Home Repair", "Good", "Weekends only"],
+  ["Step Ladder", "Six-foot ladder for painting and reaching shelves.", "Home Repair", "Good", "Most evenings"],
+  ["Shovel", "Sturdy shovel for yard or garden work.", "Garden", "Fair", "Flexible"],
+  ["Hedge Trimmer", "Electric hedge trimmer for light yard work.", "Garden", "Good", "Weekends"],
+  ["Socket Set", "Basic socket set for car and household use.", "Auto/Home Repair", "Good", "Flexible"],
+  ["Wheelbarrow", "Useful for mulch, soil, and hauling materials.", "Garden", "Fair", "Weekends"],
+];
+
+const skills = [
+  ["Gardening Help", "Can help with planting, weeding, and garden planning.", "Outdoor", "Intermediate", "Weekends"],
+  ["Furniture Assembly", "Can assemble desks, shelves, and small furniture.", "Home", "Intermediate", "Evenings"],
+  ["Basic Computer Help", "Can help set up devices, printers, and troubleshoot common issues.", "Tech", "Advanced", "Flexible"],
+  ["Lawn Care", "Can mow, edge, and do basic yard cleanup.", "Outdoor", "Intermediate", "Weekends"],
+  ["Moving Help", "Can help lift, organize, and move boxes or furniture.", "General", "Intermediate", "Flexible"],
+  ["Sewing Repair", "Can patch clothes and do simple repairs.", "Craft", "Beginner", "Evenings"],
+];
 
 async function seed() {
+  const client = await pool.connect();
+
   try {
-    console.log('Seeding database...');
+    await client.query("BEGIN");
 
-    for (let i = 0; i < NUM_USERS; i++) {
-      const name = faker.person.fullName();
-      const email = faker.internet.email().toLowerCase();
-      const passwordHash = await bcrypt.hash('password123', 10);
-      const bio = faker.lorem.sentence();
-      const zipCode = faker.location.zipCode('#####');
+    const plainPassword = "Password123!";
+    const passwordHash = await bcrypt.hash(plainPassword, 10);
 
-      const userResult = await pool.query(
-        `INSERT INTO users (name, email, password_hash, bio, zip_code)
-         VALUES ($1, $2, $3, $4, $5)
-         RETURNING user_id`,
-        [name, email, passwordHash, bio, zipCode]
+    const insertedUsers = [];
+
+    for (const [name, email, bio, zip] of users) {
+      const result = await client.query(
+        `
+        INSERT INTO users (name, email, password_hash, bio, zip_code)
+        VALUES ($1, $2, $3, $4, $5)
+        ON CONFLICT (email) DO UPDATE
+        SET name = EXCLUDED.name,
+            bio = EXCLUDED.bio,
+            zip_code = EXCLUDED.zip_code
+        RETURNING user_id, name, email, zip_code
+        `,
+        [name, email, passwordHash, bio, zip]
       );
 
-      const userId = userResult.rows[0].user_id;
-
-      const toolIds = [];
-      for (let t = 0; t < TOOLS_PER_USER; t++) {
-        const toolResult = await pool.query(
-          `INSERT INTO tools (user_id, name, description, category)
-           VALUES ($1, $2, $3, $4)
-           RETURNING tool_id`,
-          [
-            userId,
-            faker.commerce.productName(),
-            faker.lorem.sentence(),
-            faker.helpers.arrayElement(['Tech', 'Garden', 'Repair', 'Cooking', 'Car'])
-          ]
-        );
-        toolIds.push(toolResult.rows[0].tool_id);
-      }
-
-      const skillIds = [];
-      for (let s = 0; s < SKILLS_PER_USER; s++) {
-        const skillResult = await pool.query(
-          `INSERT INTO skills (user_id, name, description, category)
-           VALUES ($1, $2, $3, $4)
-           RETURNING skill_id`,
-          [
-            userId,
-            faker.helpers.arrayElement([
-              'Tutoring',
-              'Gardening Help',
-              'Computer Setup',
-              'Meal Prep',
-              'Basic Repairs'
-            ]),
-            faker.lorem.sentence(),
-            faker.helpers.arrayElement(['Tech', 'Garden', 'Repair', 'Cooking', 'Car'])
-          ]
-        );
-        skillIds.push(skillResult.rows[0].skill_id);
-      }
-
-      for (let l = 0; l < LISTINGS_PER_USER; l++) {
-        const isTool = Math.random() > 0.5;
-        const category = faker.helpers.arrayElement(['Tech', 'Garden', 'Repair', 'Cooking', 'Car']);
-
-        if (isTool && toolIds.length > 0) {
-          const toolId = faker.helpers.arrayElement(toolIds);
-
-          await pool.query(
-            `INSERT INTO listings
-             (user_id, tool_id, skill_id, type, title, description, category, availability, zip_code, status)
-             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
-            [
-              userId,
-              toolId,
-              null,
-              'tool',
-              faker.commerce.productName(),
-              faker.lorem.paragraph(),
-              category,
-              'Weekends',
-              zipCode,
-              'available'
-            ]
-          );
-        } else if (skillIds.length > 0) {
-          const skillId = faker.helpers.arrayElement(skillIds);
-
-          await pool.query(
-            `INSERT INTO listings
-             (user_id, tool_id, skill_id, type, title, description, category, availability, zip_code, status)
-             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
-            [
-              userId,
-              null,
-              skillId,
-              'skill',
-              faker.helpers.arrayElement([
-                'Help with gardening',
-                'Computer troubleshooting',
-                'Cooking lessons',
-                'Basic home repair help'
-              ]),
-              faker.lorem.paragraph(),
-              category,
-              'Evenings',
-              zipCode,
-              'available'
-            ]
-          );
-        }
-      }
+      insertedUsers.push(result.rows[0]);
     }
 
-    console.log('Done seeding!');
-    process.exit();
-  } catch (err) {
-    console.error(err);
-    process.exit(1);
+    const insertedTools = [];
+    const insertedSkills = [];
+
+    for (let i = 0; i < tools.length; i++) {
+      const owner = insertedUsers[i % insertedUsers.length];
+      const [name, description, category, condition, availabilityNotes] = tools[i];
+
+      const result = await client.query(
+        `
+        INSERT INTO tools (user_id, name, description, category, condition, availability_notes, is_active)
+        VALUES ($1, $2, $3, $4, $5, $6, true)
+        RETURNING tool_id, user_id, name, category
+        `,
+        [owner.user_id, name, description, category, condition, availabilityNotes]
+      );
+
+      insertedTools.push(result.rows[0]);
+    }
+
+    for (let i = 0; i < skills.length; i++) {
+      const owner = insertedUsers[i % insertedUsers.length];
+      const [name, description, category, experienceLevel, availabilityNotes] = skills[i];
+
+      const result = await client.query(
+        `
+        INSERT INTO skills (user_id, name, description, category, experience_level, availability_notes, is_active)
+        VALUES ($1, $2, $3, $4, $5, $6, true)
+        RETURNING skill_id, user_id, name, category
+        `,
+        [owner.user_id, name, description, category, experienceLevel, availabilityNotes]
+      );
+
+      insertedSkills.push(result.rows[0]);
+    }
+
+    for (let i = 0; i < insertedTools.length; i++) {
+      const tool = insertedTools[i];
+      const owner = insertedUsers.find((u) => u.user_id === tool.user_id);
+
+      await client.query(
+        `
+        INSERT INTO listings (user_id, tool_id, skill_id, type, title, description, category, availability, zip_code, status)
+        VALUES ($1, $2, NULL, 'tool', $3, $4, $5, $6, $7, 'available')
+        `,
+        [
+          tool.user_id,
+          tool.tool_id,
+          tool.name,
+          `Borrow my ${tool.name.toLowerCase()} for your next project.`,
+          tool.category,
+          "Check listing details",
+          owner.zip_code,
+        ]
+      );
+    }
+
+    for (let i = 0; i < insertedSkills.length; i++) {
+      const skill = insertedSkills[i];
+      const owner = insertedUsers.find((u) => u.user_id === skill.user_id);
+
+      await client.query(
+        `
+        INSERT INTO listings (user_id, tool_id, skill_id, type, title, description, category, availability, zip_code, status)
+        VALUES ($1, NULL, $2, 'skill', $3, $4, $5, $6, $7, 'available')
+        `,
+        [
+          skill.user_id,
+          skill.skill_id,
+          skill.name,
+          `Offering help with ${skill.name.toLowerCase()}.`,
+          skill.category,
+          "Contact for availability",
+          owner.zip_code,
+        ]
+      );
+    }
+
+    await client.query("COMMIT");
+
+    console.log("Seed complete.");
+    console.log("Test account password for all seeded users:", plainPassword);
+    console.log(
+      "Seeded emails:",
+      insertedUsers.map((u) => u.email).join(", ")
+    );
+  } catch (error) {
+    await client.query("ROLLBACK");
+    console.error("Seed failed:", error);
+  } finally {
+    client.release();
+    await pool.end();
   }
 }
 
