@@ -4,6 +4,7 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../config/db');
 const zipcodes = require('zipcodes');
+const { getUserReviews, getUserReviewSummary } = require('../helpers/reviews');
 
 // GET /listings
 router.get('/', async (req, res) => {
@@ -375,10 +376,17 @@ router.get('/:id', async (req, res) => {
       }
     }
 
+    const { averageRating, reviewCount } = await getUserReviewSummary(listing.user_id);
+    const reviews = await getUserReviews(listing.user_id);
+
     res.render('listing-detail', {
       listing,
-      distance
+      distance,
+      averageRating,
+      reviewCount,
+      reviews: reviews.slice(0, 3) // Show only the 3 most recent reviews on the listing page
     });
+
   } catch (err) {
     console.error(err);
     res.send('Error retrieving listing');

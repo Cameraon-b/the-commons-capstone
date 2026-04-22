@@ -4,6 +4,7 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../config/db');
 const bcrypt = require('bcrypt');
+const { getUserReviews, getUserReviewSummary } = require('../helpers/reviews');
 
 // GET /users/register
 router.get('/register', (req, res) => {
@@ -115,25 +116,8 @@ router.get('/:id', async (req, res) => {
       return res.status(404).send('User not found');
     }
 
-    const reviewsResult = await pool.query(
-      `
-      SELECT reviews.*, users.name AS reviewer_name
-      FROM reviews
-      JOIN users ON reviews.reviewer_id = users.user_id
-      WHERE reviewed_user_id = $1
-      ORDER BY reviews.created_at DESC
-      `,
-      [id]
-    );
-
-    const avgResult = await pool.query(
-      `
-      SELECT AVG(rating)::numeric(10,2) AS average_rating, COUNT(*) AS review_count
-      FROM reviews
-      WHERE reviewed_user_id = $1
-      `,
-      [id]
-    );
+    const reviews = await getUserReviews(id);
+    const { averageRating, reviewCount } = await getUserReviewSummary(id);
 
     const toolsResult = await pool.query(
       `
@@ -165,19 +149,16 @@ router.get('/:id', async (req, res) => {
       [id]
     );
 
-    const allListings = listingsResult.rows;
-    const tools = allListings.filter(listing => listing.type === 'tool');
-    const skills = allListings.filter(listing => listing.type === 'skill');
-
     res.render('profile', {
       user: userResult.rows[0],
-      reviews: reviewsResult.rows,
-      averageRating: avgResult.rows[0].average_rating,
-      reviewCount: avgResult.rows[0].review_count,
+      reviews,
+      averageRating,
+      reviewCount,
       tools: toolsResult.rows,
       skills: skillsResult.rows,
       listings: listingsResult.rows
     });
+
   } catch (err) {
     console.error(err);
     res.send('Error retrieving profile');

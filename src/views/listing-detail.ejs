@@ -33,7 +33,7 @@
       </p>
 
       <p class="meta">
-        <strong>Posted:</strong> <%= listing.created_at %>
+        <strong>Posted:</strong> <%= formatDate(listing.created_at) %>
       </p>
 
       <% if (distance !== null) { %>
@@ -51,7 +51,11 @@
       </p>
 
       <p class="meta">
-        <strong>Rating:</strong> 4.8 / 5 (placeholder)
+        <strong>Owner Rating:</strong>
+        <%= averageRating ? `${averageRating} / 5` : 'No rating yet' %>
+        <% if (reviewCount > 0) { %>
+          (<%= reviewCount %> review<%= reviewCount === 1 ? '' : 's' %>)
+        <% } %>
       </p>
 
       <hr />
@@ -65,9 +69,20 @@
       <hr />
 
       <h2>Recent Reviews</h2>
-      <div class="card" style="background:#f8f8f8;">
-        <p class="meta">5/5 - Quick to respond, easy to coordinate. (placeholder)</p>
-      </div>
+
+      <% if (!reviews || reviews.length === 0) { %>
+        <p class="meta">No reviews yet.</p>
+      <% } else { %>
+        <div class="stack">
+          <% reviews.forEach(review => { %>
+            <div class="card" style="background:#f8f8f8;">
+              <p><strong><%= review.rating %>/5</strong> from <%= review.reviewer_name %></p>
+              <p><%= review.comment %></p>
+              <p class="meta"><%= formatTimestamp(review.created_at) %></p>
+            </div>
+          <% }) %>
+        </div>
+      <% } %>
 
       <hr />
 

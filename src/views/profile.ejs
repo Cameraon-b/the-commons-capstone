@@ -18,7 +18,7 @@
       </div>
     </div>
 
-    <h1 class="section-title">My Profile</h1>
+    <h1 class="section-title">Your Profile</h1>
 
     <!-- Profile Info Card -->
     <div class="card">
@@ -27,7 +27,7 @@
       <p class="meta"><strong>Email:</strong> <%= user.email %></p>
       <p><strong>About:</strong> <%= user.bio || 'No bio yet.' %></p>
       <p><strong>Zip Code:</strong> <%= user.zip_code || 'Not provided' %></p>
-      <p class="meta"><strong>Joined:</strong> <%= user.created_at %></p>
+      <p class="meta"><strong>Member Since:</strong> <%= formatJoinDate(user.created_at) %></p>
     </div>
 
     <!-- Reviews Card -->
@@ -47,7 +47,7 @@
             <div class="card" style="background:#f8f8f8;">
               <p><strong><%= review.rating %>/5</strong> from <%= review.reviewer_name %></p>
               <p><%= review.comment %></p>
-              <p class="meta"><%= review.created_at %></p>
+              <p class="meta"><%= formatTimestamp(review.created_at) %></p>
             </div>
           <% }) %>
         </div>
@@ -57,7 +57,7 @@
     <!-- Tools Card -->
     <div class="card" style="margin-top: 20px;">
       <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h3>My Tools</h3>
+        <h3>Your Tools</h3>
         <a class="btn" href="/tools/new">+ Add Tool</a>
       </div>
 
@@ -87,7 +87,7 @@
     <!-- Skills Card -->
     <div class="card" style="margin-top: 20px;">
       <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h3>My Skills</h3>
+        <h3>Your Skills</h3>
         <a class="btn" href="/skills/new">+ Add Skill</a>
       </div>
 
@@ -117,7 +117,7 @@
     <!-- Listings Card -->
     <div class="card" style="margin-top: 20px;">
       <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h3>My Listings</h3>
+        <h3>Your Listings</h3>
       </div>
 
       <% if (listings.length === 0) { %>

@@ -19,6 +19,46 @@ const attachNotificationCount = require('./middleware/notificationCount');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+function formatTimestamp(date) {
+  if (!date) return "";
+
+  const d = new Date(date);
+  if (isNaN(d)) return "";
+
+  return d.toLocaleString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit"
+  });
+}
+
+function formatDate(date) {
+  if (!date) return "";
+
+  const d = new Date(date);
+  if (isNaN(d)) return "";
+
+  return d.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric"
+  });
+}
+
+function formatJoinDate(date) {
+  if (!date) return "";
+
+  const d = new Date(date);
+  if (isNaN(d)) return "";
+
+  return d.toLocaleDateString("en-US", {
+    month: "long",
+    year: "numeric"
+  });
+}
+
 // middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
@@ -28,6 +68,10 @@ app.use(session({
   resave: false,
   saveUninitialized: false
 }));
+
+app.locals.formatTimestamp = formatTimestamp;
+app.locals.formatDate = formatDate;
+app.locals.formatJoinDate = formatJoinDate;
 
 // current user from session
 app.use((req, res, next) => {
