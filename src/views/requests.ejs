@@ -40,7 +40,7 @@
               <div class="card">
                 <h3>Request from: <%= request.requester_name %></h3>
                 <p><strong>Requested:</strong> <%= request.listing_title %></p>
-                <p class="meta"><strong>Created:</strong> <%= request.created_at %></p>
+                <p class="meta"><%= formatTimestamp(request.created_at) %></p>
                 <p><strong>Message:</strong> <%= request.request_message %></p>
                 <p><strong>Contact:</strong> <%= request.contact_method %> - <%= request.contact_value %></p>
                 <p><strong>Status:</strong> <%= request.status %></p>
@@ -84,7 +84,7 @@
               <% if (request.status === 'pending' || request.status === 'accepted') { %>
                 <div class="card">
                   <h3>Requested <%= request.listing_title %> from <%= request.owner_name %></h3>
-                  <p class="meta"><strong>Created:</strong> <%= request.created_at %></p>
+                  <p class="meta"><%= formatTimestamp(request.created_at) %></p>
                   <p><strong>Status:</strong> <%= request.status %></p>
                   <p><strong>Message:</strong> <%= request.request_message %></p>
                 </div>
@@ -122,7 +122,7 @@
                   <p><strong>Owner:</strong> <%= request.owner_name %></p>
                 <% } %>
 
-                <p class="meta"><strong>Created:</strong> <%= request.created_at %></p>
+                <p class="meta"><%= formatTimestamp(request.created_at) %></p>
                 <p><strong>Status:</strong> <%= request.status %></p>
 
                 <% if (request.status === 'completed') { %>

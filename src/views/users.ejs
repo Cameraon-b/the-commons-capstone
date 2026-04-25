@@ -1,31 +1,105 @@
-<!-- views/users.ejs - EJS template for the "Users" page, which displays a list of all registered users in the system. Each user is displayed with their name and email, and clicking on a user's name will take you to their profile page. The page also includes a link to register a new user and a link to go back to the home page. -->
-
-<!-- this page will be removed in the future -->
-
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Users</title>
+  <title>Find People</title>
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <h1>Users</h1>
+  <div class="page">
 
-  <a href="/users/register">Register New User</a>
-  <br /><br />
+    <!-- Topbar -->
+    <div class="topbar">
+      <div class="brand">The Commons</div>
 
-  <ul>
-    <% users.forEach(user => { %>
-      <li>
-        <a href="/users/<%= user.user_id %>">
-          <strong><%= user.name %></strong>
-        </a>
-        - <%= user.email %>
-      </li>
-    <% }) %>
-  </ul>
+      <div class="nav-actions">
+        <a class="btn secondary" href="/">Home</a>
+        <a class="btn secondary" href="/listings">Browse Listings</a>
 
-  <br />
-  <a href="/">Back Home</a>
+        <% if (currentUserId) { %>
+          <a class="btn" href="/users/<%= currentUserId %>">Your Profile</a>
+        <% } else { %>
+          <a class="btn" href="/users/login">Login</a>
+        <% } %>
+      </div>
+    </div>
+
+    <!-- Page Title -->
+    <h1 class="section-title">Find People</h1>
+
+    <!-- Search Form -->
+    <div class="card">
+      <form method="GET" action="/users" class="stack">
+
+        <div class="form-group">
+          <label for="zip_code">Zip Code</label>
+          <input 
+            type="text" 
+            id="zip_code" 
+            name="zip_code" 
+            value="<%= currentZip %>" 
+            placeholder="e.g. 63101"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="radius">Radius (miles)</label>
+          <input 
+            type="number" 
+            id="radius" 
+            name="radius" 
+            value="<%= currentRadius %>" 
+            placeholder="e.g. 25"
+          />
+        </div>
+
+        <div class="actions">
+          <button type="submit" class="btn">Search</button>
+        </div>
+
+      </form>
+    </div>
+
+    <!-- Users List -->
+    <% if (!users || users.length === 0) { %>
+      <p class="meta">No users found.</p>
+    <% } else { %>
+      <div class="stack">
+
+        <% users.forEach(user => { %>
+          <div class="card">
+
+            <h2><%= user.name %></h2>
+
+            <p><%= user.bio || 'No bio yet.' %></p>
+
+            <% if (user.distance !== undefined) { %>
+              <p class="meta">
+                <strong><%= user.distance %> miles away</strong>
+              </p>
+            <% } else { %>
+              <p class="meta">
+                <strong>Zip Code:</strong> <%= user.zip_code || 'Not provided' %>
+              </p>
+            <% } %>
+
+            <p class="meta">
+              <strong>Rating:</strong>
+              <%= user.average_rating ? `${user.average_rating} / 5` : 'No rating yet' %>
+              <% if (Number(user.review_count) > 0) { %>
+                (<%= user.review_count %> review<%= Number(user.review_count) === 1 ? '' : 's' %>)
+              <% } %>
+            </p>
+
+            <div class="actions" style="margin-top: 10px;">
+              <a class="btn" href="/users/<%= user.user_id %>">View Profile</a>
+            </div>
+
+          </div>
+        <% }) %>
+
+      </div>
+    <% } %>
+
+  </div>
 </body>
 </html>

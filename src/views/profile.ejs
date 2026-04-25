@@ -28,6 +28,11 @@
       <p><strong>About:</strong> <%= user.bio || 'No bio yet.' %></p>
       <p><strong>Zip Code:</strong> <%= user.zip_code || 'Not provided' %></p>
       <p class="meta"><strong>Member Since:</strong> <%= formatJoinDate(user.created_at) %></p>
+      <% if (Number(currentUserId) === Number(user.user_id)) { %>
+        <div class="actions" style="margin-top: 15px;">
+          <a class="btn" href="/users/<%= user.user_id %>/edit">Edit Profile</a>
+        </div>
+      <% } %>
     </div>
 
     <!-- Reviews Card -->
@@ -58,7 +63,9 @@
     <div class="card" style="margin-top: 20px;">
       <div style="display:flex; justify-content:space-between; align-items:center;">
         <h3>Your Tools</h3>
-        <a class="btn" href="/tools/new">+ Add Tool</a>
+        <% if (Number(currentUserId) === Number(user.user_id)) { %>
+          <a class="btn" href="/tools/new">+ Add Tool</a>
+        <% } %>
       </div>
 
       <% if (tools.length === 0) { %>
@@ -71,13 +78,15 @@
               <p><strong>Category:</strong> <%= tool.category || 'Uncategorized' %></p>
               <p><strong>Description:</strong> <%= tool.description || 'No description provided.' %></p>
 
-              <div style="margin-top: 10px; display:flex; gap:10px; align-items:center;">
-                <a class="btn" href="/listings/create?tool_id=<%= tool.tool_id %>">Create Listing</a>
+              <% if (Number(currentUserId) === Number(user.user_id)) { %>
+                <div style="margin-top: 10px; display:flex; gap:10px; align-items:center;">
+                  <a class="btn" href="/listings/create?tool_id=<%= tool.tool_id %>">Create Listing</a>
 
-                <form action="/tools/<%= tool.tool_id %>/delete" method="POST" onsubmit="return confirm('Delete this tool?');">
-                  <button class="btn secondary" type="submit">Delete</button>
-                </form>
-              </div>
+                  <form action="/tools/<%= tool.tool_id %>/delete" method="POST" onsubmit="return confirm('Delete this tool?');">
+                    <button class="btn secondary" type="submit">Delete</button>
+                  </form>
+                </div>
+              <% } %>
             </div>
           <% }) %>
         </div>
@@ -88,7 +97,9 @@
     <div class="card" style="margin-top: 20px;">
       <div style="display:flex; justify-content:space-between; align-items:center;">
         <h3>Your Skills</h3>
-        <a class="btn" href="/skills/new">+ Add Skill</a>
+        <% if (Number(currentUserId) === Number(user.user_id)) { %>
+          <a class="btn" href="/skills/new">+ Add Skill</a>
+        <% } %>
       </div>
 
       <% if (skills.length === 0) { %>
@@ -101,13 +112,15 @@
               <p><strong>Category:</strong> <%= skill.category || 'Uncategorized' %></p>
               <p><strong>Description:</strong> <%= skill.description || 'No description provided.' %></p>
 
-              <div style="margin-top: 10px; display:flex; gap:10px; align-items:center;">
-                <a class="btn" href="/listings/create?skill_id=<%= skill.skill_id %>">Create Listing</a>
+              <% if (Number(currentUserId) === Number(user.user_id)) { %>
+                <div style="margin-top: 10px; display:flex; gap:10px; align-items:center;">
+                  <a class="btn" href="/listings/create?skill_id=<%= skill.skill_id %>">Create Listing</a>
 
-                <form action="/skills/<%= skill.skill_id %>/delete" method="POST" onsubmit="return confirm('Delete this skill?');">
-                  <button class="btn secondary" type="submit">Delete</button>
-                </form>
-              </div>
+                  <form action="/skills/<%= skill.skill_id %>/delete" method="POST" onsubmit="return confirm('Delete this skill?');">
+                    <button class="btn secondary" type="submit">Delete</button>
+                  </form>
+                </div>
+              <% } %>
             </div>
           <% }) %>
         </div>
@@ -137,13 +150,15 @@
               </p>
               <p><strong>Availability:</strong> <%= listing.availability || 'Not specified' %></p>
 
-              <div style="margin-top: 10px; display:flex; gap:10px; align-items:center;">
-                <a class="btn" href="/listings/<%= listing.listing_id %>/edit">Edit</a>
+              <% if (Number(currentUserId) === Number(user.user_id)) { %>
+                <div style="margin-top: 10px; display:flex; gap:10px; align-items:center;">
+                  <a class="btn" href="/listings/<%= listing.listing_id %>/edit">Edit</a>
 
-                <form action="/listings/<%= listing.listing_id %>/delete" method="POST" onsubmit="return confirm('Delete this listing?');">
-                  <button class="btn secondary" type="submit">Delete</button>
-                </form>
-              </div>
+                  <form action="/listings/<%= listing.listing_id %>/delete" method="POST" onsubmit="return confirm('Delete this listing?');">
+                    <button class="btn secondary" type="submit">Delete</button>
+                  </form>
+                </div>
+              <% } %>
             </div>
           <% }) %>
         </div>

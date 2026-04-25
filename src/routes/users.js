@@ -90,15 +90,142 @@ router.post('/logout', (req, res) => {
 });
 
 // GET /users
+const zipcodes = require('zipcodes');
+
 router.get('/', async (req, res) => {
   try {
-    const result = await pool.query(
-      'SELECT * FROM users ORDER BY created_at DESC'
-    );
-    res.render('users', { users: result.rows });
+    const { zip_code, radius } = req.query;
+
+    const result = await pool.query(`
+      SELECT 
+        users.user_id,
+        users.name,
+        users.bio,
+        users.zip_code,
+        users.created_at,
+        ROUND(AVG(reviews.rating)::numeric, 1) AS average_rating,
+        COUNT(reviews.review_id) AS review_count
+      FROM users
+      LEFT JOIN reviews ON users.user_id = reviews.reviewed_user_id
+      GROUP BY users.user_id
+      ORDER BY users.created_at DESC
+    `);
+
+    let users = result.rows;
+
+    if (zip_code && radius) {
+      users = users
+        .map(user => {
+          if (!user.zip_code) return null;
+
+          const distance = Math.round(zipcodes.distance(zip_code, user.zip_code));
+
+          if (distance > Number(radius)) return null;
+
+          return {
+            ...user,
+            distance
+          };
+        })
+        .filter(Boolean)
+        .sort((a, b) => a.distance - b.distance);
+    }
+
+    res.render('users', {
+      users,
+      currentZip: zip_code || '',
+      currentRadius: radius || ''
+    });
+
   } catch (err) {
     console.error(err);
     res.send('Error retrieving users');
+  }
+});
+
+// GET /users/:id/edit
+router.get('/:id/edit', async (req, res) => {
+  if (!req.currentUserId) {
+    return res.render('message', {
+      title: 'Login Required',
+      message: 'You must be logged in to edit your profile.',
+      actionText: 'Login',
+      actionHref: '/users/login'
+    });
+  }
+
+  const { id } = req.params;
+
+  if (Number(id) !== Number(req.currentUserId)) {
+    return res.render('message', {
+      title: 'Access Denied',
+      message: 'You can only edit your own profile.',
+      actionText: 'Back to Profile',
+      actionHref: `/users/${req.currentUserId}`
+    });
+  }
+
+  try {
+    const result = await pool.query(
+      'SELECT user_id, name, email, bio, zip_code FROM users WHERE user_id = $1',
+      [id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).send('User not found');
+    }
+
+    res.render('edit-profile', {
+      user: result.rows[0]
+    });
+  } catch (err) {
+    console.error(err);
+    res.send('Error loading edit profile form');
+  }
+});
+
+// POST /users/:id/edit
+router.post('/:id/edit', async (req, res) => {
+  if (!req.currentUserId) {
+    return res.render('message', {
+      title: 'Login Required',
+      message: 'You must be logged in to edit your profile.',
+      actionText: 'Login',
+      actionHref: '/users/login'
+    });
+  }
+
+  const { id } = req.params;
+  const { name, bio, zip_code } = req.body;
+
+  if (Number(id) !== Number(req.currentUserId)) {
+    return res.render('message', {
+      title: 'Access Denied',
+      message: 'You can only edit your own profile.',
+      actionText: 'Back to Profile',
+      actionHref: `/users/${req.currentUserId}`
+    });
+  }
+
+  try {
+    await pool.query(
+      `
+      UPDATE users
+      SET name = $1,
+          bio = $2,
+          zip_code = $3,
+          updated_at = CURRENT_TIMESTAMP
+      WHERE user_id = $4
+      `,
+      [name, bio, zip_code, id]
+    );
+
+    req.session.userName = name;
+
+    res.redirect(`/users/${id}`);
+  } catch (err) {
+    console.error(err);
+    res.send('Error updating profile');
   }
 });
 

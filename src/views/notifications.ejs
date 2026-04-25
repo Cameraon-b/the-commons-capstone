@@ -53,9 +53,7 @@
                   <p class="meta">
                     Type: <%= notification.type.replace(/_/g, ' ') %>
                   </p>
-                  <p class="meta">
-                    <%= notification.created_at %>
-                  </p>
+                  <p class="meta"><%= formatTimestamp(notification.created_at) %></p>
 
                   <form action="/notifications/<%= notification.notification_id %>/read" method="POST" style="margin-top: 10px;">
                     <button class="btn secondary" type="submit">Mark Read</button>
@@ -84,7 +82,7 @@
                     Type: <%= notification.type.replace(/_/g, ' ') %>
                   </p>
                   <p class="meta">
-                    <%= notification.created_at %>
+                    <%= formatTimestamp(notification.created_at) %>
                   </p>
                 </div>
               <% }) %>

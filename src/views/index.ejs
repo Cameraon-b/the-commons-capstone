@@ -52,11 +52,11 @@
         <p class="meta welcome-text">Hello, <strong><%= currentUserName %></strong></p>
 
         <div class="actions hero-actions">
+          <a class="btn" href="/users/<%= currentUserId %>">Your Profile</a>
           <a class="btn secondary" href="/requests">Manage Requests</a>
-          <a class="btn secondary" href="/users/<%= currentUserId %>">My Profile</a>
           <a class="btn secondary" href="/tools/new">+ Add Tool</a>
           <a class="btn secondary" href="/skills/new">+ Add Skill</a>
-          <a class="btn secondary" href="/users">View Users</a>
+          <a class="btn secondary" href="/users">Find Users</a>
         </div>
       </div>
     <% } %>

@@ -11,12 +11,14 @@ router.get('/', async (req, res) => {
   try {
     const { zip_code, radius, category, type } = req.query;
 
-    let conditions = ['LOWER(listings.status) != \'unavailable\''];
+    let conditions = [`LOWER(listings.status) != 'unavailable'`];
     let values = [];
     let valueIndex = 1;
 
     if (zip_code && radius) {
-      const nearbyZips = zipcodes.radius(zip_code, parseInt(radius));
+      const nearbyZips = zipcodes
+        .radius(zip_code, parseInt(radius))
+        .map(zip => String(zip));
 
       conditions.push(`listings.zip_code = ANY($${valueIndex})`);
       values.push(nearbyZips);
@@ -52,15 +54,22 @@ router.get('/', async (req, res) => {
 
     if (zip_code) {
       listings = listings.map(listing => {
-        const distance = Math.round(zipcodes.distance(zip_code, listing.zip_code));
+        const rawDistance = zipcodes.distance(String(zip_code), String(listing.zip_code));
 
         return {
           ...listing,
-          distance
+          distance:
+            rawDistance !== null && rawDistance !== undefined
+              ? Number(rawDistance.toFixed(2))
+              : null
         };
       });
 
-      listings.sort((a, b) => a.distance - b.distance);
+      listings.sort((a, b) => {
+        if (a.distance === null) return 1;
+        if (b.distance === null) return -1;
+        return a.distance - b.distance;
+      });
     }
 
     res.render('listings', {
