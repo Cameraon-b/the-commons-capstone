@@ -77,8 +77,34 @@
         <a class="btn secondary" href="/listings?category=repair">Repairs</a>
         <a class="btn secondary" href="/listings?category=cooking">Cooking</a>
         <a class="btn secondary" href="/listings?category=car">Cars</a>
+        <a class="btn secondary" href="/listings?category=art">Art</a>
+        <a class="btn secondary" href="/listings?category=music">Music</a>
+        <a class="btn secondary" href="/listings?category=education">Education</a>
+        <a class="btn secondary" href="/listings?category=fitness">Fitness</a>
+        <a class="btn secondary" href="/listings?category=woodworking">Woodworking</a>
+        <a class="btn secondary" href="/listings?category=crafts">Crafts</a>
+        <a class="btn secondary" href="/listings?category=outdoors">Outdoors</a>
       </div>
     </div>
+
+    <% if (featuredListings && featuredListings.length > 0) { %>
+      <div class="card" style="margin-top: 24px;">
+        <h2>Featured Listings</h2>
+
+        <div class="featured-listings">
+          <% featuredListings.forEach(listing => { %>
+            <a class="featured-card" href="/listings/<%= listing.listing_id %>">
+              <img 
+                src="<%= listing.image_url %>" 
+                alt="<%= listing.title %>"
+                class="featured-image"
+              >
+              <p><strong><%= listing.title %></strong></p>
+            </a>
+          <% }) %>
+        </div>
+      </div>
+    <% } %>
   </div>
 </body>
 </html>

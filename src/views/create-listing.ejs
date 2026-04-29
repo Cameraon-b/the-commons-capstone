@@ -128,6 +128,18 @@
             >
           </div>
 
+          <div class="form-group">
+            <label for="image_url">Image URL (optional)</label>
+            <input
+              type="text"
+              id="image_url"
+              name="image_url"
+              value="<%= formData.image_url || '' %>"
+              placeholder="Paste a direct image link"
+            />
+            <p class="meta">Use a direct image URL from a site like Unsplash or Pexels.</p>
+          </div>
+
           <button class="btn" type="submit">Create Listing</button>
         </form>
       </div>

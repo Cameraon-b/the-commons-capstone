@@ -21,57 +21,78 @@
     </div>
 
     <div class="card">
+
       <h1 class="section-title"><%= listing.title %></h1>
 
-      <p class="meta">
-        <strong>Type:</strong> <%= listing.type %>
-      </p>
+      <div class="listing-detail-content">
 
-      <p class="meta">
-        <strong>Status:</strong>
-        <span class="status-badge"><%= listing.status %></span>
-      </p>
+        <!-- LEFT: META INFO -->
+        <div class="listing-detail-text">
 
-      <p class="meta">
-        <strong>Posted:</strong> <%= formatDate(listing.created_at) %>
-      </p>
+          <p class="meta">
+            <strong>Type:</strong> <%= listing.type %>
+          </p>
 
-      <% if (distance !== null) { %>
-        <p class="meta">
-          <strong><%= distance %> miles away</strong> (Zip: <%= listing.zip_code %>)
-        </p>
-      <% } else { %>
-        <p class="meta">
-          <strong>Zip Code:</strong> <%= listing.zip_code %>
-        </p>
-      <% } %>
+          <p class="meta">
+            <strong>Status:</strong>
+            <span class="status-badge"><%= listing.status %></span>
+          </p>
 
-      <p class="meta">
-        <strong>Owner:</strong> <%= listing.name %>
-      </p>
+          <p class="meta">
+            <strong>Posted:</strong> <%= formatDate(listing.created_at) %>
+          </p>
 
-      <p class="meta">
-        <strong>Owner Rating:</strong>
-        <%= averageRating ? `${averageRating} / 5` : 'No rating yet' %>
-        <% if (reviewCount > 0) { %>
-          (<%= reviewCount %> review<%= reviewCount === 1 ? '' : 's' %>)
+          <% if (distance !== null) { %>
+            <p class="meta">
+              <strong><%= distance %> miles away</strong> (Zip: <%= listing.zip_code %>)
+            </p>
+          <% } else { %>
+            <p class="meta">
+              <strong>Zip Code:</strong> <%= listing.zip_code %>
+            </p>
+          <% } %>
+
+          <p class="meta">
+            <strong>Owner:</strong> <%= listing.name %>
+          </p>
+
+          <p class="meta">
+            <strong>Owner Rating:</strong>
+            <%= averageRating ? `${averageRating} / 5` : `${listing.name} has no rating yet` %>
+            <% if (reviewCount > 0) { %>
+              (<%= reviewCount %> review<%= reviewCount === 1 ? '' : 's' %>)
+            <% } %>
+          </p>
+
+        </div>
+
+        <!-- RIGHT: IMAGE -->
+        <% if (listing.image_url) { %>
+          <div class="listing-detail-image-wrapper">
+            <img 
+              src="<%= listing.image_url %>" 
+              alt="<%= listing.title %>" 
+              class="listing-detail-image"
+            >
+          </div>
         <% } %>
-      </p>
+
+      </div>
 
       <hr />
 
+      <!-- DESCRIPTION stays full width -->
       <p><strong>Description:</strong></p>
       <p><%= listing.description %></p>
 
       <p><strong>Category:</strong> <%= listing.category %></p>
       <p><strong>Availability:</strong> <%= listing.availability %></p>
-
       <hr />
 
       <h2>Recent Reviews</h2>
 
       <% if (!reviews || reviews.length === 0) { %>
-        <p class="meta">No reviews yet.</p>
+        <p class="meta"> <%= listing.name %> has no reviews yet.</p>
       <% } else { %>
         <div class="stack">
           <% reviews.forEach(review => { %>

@@ -19,6 +19,8 @@ const attachNotificationCount = require('./middleware/notificationCount');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+const pool = require("./config/db");
+
 function formatTimestamp(date) {
   if (!date) return "";
 
@@ -88,8 +90,26 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
 // routes
-app.get("/", (req, res) => {
-  res.render("index");
+app.get("/", async (req, res) => {
+  try {
+    const featuredResult = await pool.query(`
+      SELECT listing_id, title, image_url
+      FROM listings
+      WHERE image_url IS NOT NULL
+        AND LOWER(status) = 'available'
+      ORDER BY RANDOM()
+      LIMIT 3
+    `);
+
+    res.render("index", {
+      featuredListings: featuredResult.rows
+    });
+  } catch (err) {
+    console.error(err);
+    res.render("index", {
+      featuredListings: []
+    });
+  }
 });
 
 app.use("/listings", listingsRoutes);

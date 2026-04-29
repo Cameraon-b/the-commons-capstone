@@ -1,5 +1,7 @@
  <!-- views/profile.ejs - EJS template for the "Profile" page, which displays the user's profile information, community reputation, tools, and skills. Users can add, edit, or delete their tools and skills. The top navigation bar includes links to the home page, listings page, and requests page. -->
 
+ <% const isOwner = Number(currentUserId) === Number(user.user_id); %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -28,7 +30,7 @@
       <p><strong>About:</strong> <%= user.bio || 'No bio yet.' %></p>
       <p><strong>Zip Code:</strong> <%= user.zip_code || 'Not provided' %></p>
       <p class="meta"><strong>Member Since:</strong> <%= formatJoinDate(user.created_at) %></p>
-      <% if (Number(currentUserId) === Number(user.user_id)) { %>
+      <% if (isOwner) { %>
         <div class="actions" style="margin-top: 15px;">
           <a class="btn" href="/users/<%= user.user_id %>/edit">Edit Profile</a>
         </div>
@@ -62,8 +64,8 @@
     <!-- Tools Card -->
     <div class="card" style="margin-top: 20px;">
       <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h3>Your Tools</h3>
-        <% if (Number(currentUserId) === Number(user.user_id)) { %>
+        <h3><%= isOwner ? 'Your Tools' : `${user.name}'s Tools` %></h3>
+        <% if (isOwner) { %>
           <a class="btn" href="/tools/new">+ Add Tool</a>
         <% } %>
       </div>
@@ -78,7 +80,7 @@
               <p><strong>Category:</strong> <%= tool.category || 'Uncategorized' %></p>
               <p><strong>Description:</strong> <%= tool.description || 'No description provided.' %></p>
 
-              <% if (Number(currentUserId) === Number(user.user_id)) { %>
+              <% if (isOwner) { %>
                 <div style="margin-top: 10px; display:flex; gap:10px; align-items:center;">
                   <a class="btn" href="/listings/create?tool_id=<%= tool.tool_id %>">Create Listing</a>
 
@@ -96,8 +98,8 @@
     <!-- Skills Card -->
     <div class="card" style="margin-top: 20px;">
       <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h3>Your Skills</h3>
-        <% if (Number(currentUserId) === Number(user.user_id)) { %>
+        <h3><%= isOwner ? 'Your Skills' : `${user.name}'s Skills` %></h3>
+        <% if (isOwner) { %>
           <a class="btn" href="/skills/new">+ Add Skill</a>
         <% } %>
       </div>
@@ -112,7 +114,7 @@
               <p><strong>Category:</strong> <%= skill.category || 'Uncategorized' %></p>
               <p><strong>Description:</strong> <%= skill.description || 'No description provided.' %></p>
 
-              <% if (Number(currentUserId) === Number(user.user_id)) { %>
+              <% if (isOwner) { %>
                 <div style="margin-top: 10px; display:flex; gap:10px; align-items:center;">
                   <a class="btn" href="/listings/create?skill_id=<%= skill.skill_id %>">Create Listing</a>
 
@@ -130,7 +132,7 @@
     <!-- Listings Card -->
     <div class="card" style="margin-top: 20px;">
       <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h3>Your Listings</h3>
+        <h3><%= isOwner ? 'Your Active Listings' : `${user.name}'s Active Listings` %></h3>
       </div>
 
       <% if (listings.length === 0) { %>
@@ -150,7 +152,7 @@
               </p>
               <p><strong>Availability:</strong> <%= listing.availability || 'Not specified' %></p>
 
-              <% if (Number(currentUserId) === Number(user.user_id)) { %>
+              <% if (isOwner) { %>
                 <div style="margin-top: 10px; display:flex; gap:10px; align-items:center;">
                   <a class="btn" href="/listings/<%= listing.listing_id %>/edit">Edit</a>
 
@@ -164,6 +166,42 @@
         </div>
       <% } %>
     </div>
+
+    <!-- Archived Listings Card -->
+    <% if (archivedListings && archivedListings.length > 0) { %>
+      <div class="card" style="margin-top: 20px;">
+        <h3><%= isOwner ? 'Archived Listings' : `${user.name}'s Archived Listings` %></h3>
+        <p class="meta">These listings are no longer available but are kept for exchange history.</p>
+
+        <div class="stack scroll-section">
+          <% archivedListings.forEach(listing => { %>
+            <div class="card" style="background:#f8f8f8;">
+              <p><strong><%= listing.title %></strong></p>
+              <p><strong>Type:</strong> <%= listing.type %></p>
+              <p><strong>Category:</strong> <%= listing.category || 'Uncategorized' %></p>
+
+              <p>
+                <strong>Status:</strong>
+                <span class="status-badge <%= listing.status %>">
+                  <%= listing.status.replace('_', ' ').toUpperCase() %>
+                </span>
+              </p>
+
+              <p><strong>Availability:</strong> <%= listing.availability || 'Not specified' %></p>
+
+              <div style="margin-top: 10px; display:flex; gap:10px; align-items:center;">
+                <% if (isOwner) { %>
+                  <a class="btn" href="/listings/<%= listing.listing_id %>/edit">Edit</a>
+                <% } %>
+
+                <a class="btn secondary" href="/listings/<%= listing.listing_id %>">View Details</a>
+              </div>
+              
+            </div>
+          <% }) %>
+        </div>
+      </div>
+    <% } %>
   </div>
 </body>
 </html>

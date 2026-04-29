@@ -85,38 +85,59 @@
 
     <div class="stack">
       <% listings.forEach(listing => { %>
-        <div class="card-hover listing-clickable" data-link="/listings/<%= listing.listing_id %>">
-          <div class="listing-card-title">
-            <a href="/listings/<%= listing.listing_id %>"><%= listing.title %></a>
-          </div>
+        <div class="card-hover listing-clickable listing-card" data-link="/listings/<%= listing.listing_id %>">
 
-          <p><%= listing.description %></p>
-          <p class="meta"><strong>Posted by:</strong> <%= listing.name %></p>
-          <p class="meta">
-            Type: <%= listing.type %> |
-            Category: <%= listing.category %> |
-            Availability: <%= listing.availability %> |
-            <span class="status-badge <%= listing.status %>">
-              <%= listing.status.replace('_', ' ').toUpperCase() %>
-            </span>
-          </p>
+          <div class="listing-card-content">
 
-          <% if (listing.distance !== null && listing.distance !== undefined) { %>
-            <p class="meta">
-              <strong><%= listing.distance %> miles away</strong>
-              <% if (listing.zip_code) { %>
-                (Zip: <%= listing.zip_code %>)
+            <!-- LEFT: TEXT -->
+            <div class="listing-text">
+
+              <div class="listing-card-title">
+                <a href="/listings/<%= listing.listing_id %>"><%= listing.title %></a>
+              </div>
+
+              <p><%= listing.description %></p>
+
+              <p class="meta"><strong>Posted by:</strong> <%= listing.name %></p>
+
+              <p class="meta">
+                Type: <%= listing.type %> |
+                Category: <%= listing.category %> |
+                Availability: <%= listing.availability %> |
+                <span class="status-badge <%= listing.status %>">
+                  <%= listing.status.replace('_', ' ').toUpperCase() %>
+                </span>
+              </p>
+
+              <% if (listing.distance !== null && listing.distance !== undefined) { %>
+                <p class="meta">
+                  <strong><%= listing.distance %> miles away</strong>
+                  <% if (listing.zip_code) { %>
+                    (Zip: <%= listing.zip_code %>)
+                  <% } %>
+                </p>
+              <% } else { %>
+                <p class="meta">
+                  <strong>Zip Code:</strong> <%= listing.zip_code || 'Not provided' %>
+                </p>
               <% } %>
-            </p>
-          <% } else { %>
-            <p class="meta">
-              <strong>Zip Code:</strong> <%= listing.zip_code || 'Not provided' %>
-            </p>
-          <% } %>
+
+            </div>
+
+            <!-- RIGHT: IMAGE -->
+            <% if (listing.image_url) { %>
+              <div class="listing-image-wrapper">
+                <img 
+                  src="<%= listing.image_url %>" 
+                  alt="<%= listing.title %>" 
+                  class="listing-image"
+                >
+              </div>
+            <% } %>
+          </div>
         </div>
       <% }) %>
     </div>
-  </div>
   <script>
     document.querySelectorAll('.listing-clickable').forEach(card => {
       card.addEventListener('click', (e) => {

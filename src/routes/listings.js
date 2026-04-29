@@ -116,7 +116,8 @@ router.get('/create', async (req, res) => {
       description: '',
       category: '',
       zip_code: '',
-      availability: ''
+      availability: '',
+      image_url: ''
     };
 
     const userResult = await pool.query(
@@ -162,8 +163,10 @@ router.get('/create', async (req, res) => {
         description: selectedItem.description || '',
         category: selectedItem.category || '',
         zip_code: userZip || '',
-        availability: ''
+        availability: '',
+        image_url: ''
       };
+
     } else if (skill_id) {
       const skillResult = await pool.query(
         'SELECT * FROM skills WHERE skill_id = $1 AND user_id = $2',
@@ -187,7 +190,8 @@ router.get('/create', async (req, res) => {
         description: selectedItem.description || '',
         category: selectedItem.category || '',
         zip_code: userZip || '',
-        availability: ''
+        availability: '',
+        image_url: ''
       };
     }
 
@@ -262,7 +266,8 @@ router.post('/:id/edit', async (req, res) => {
     category, 
     availability, 
     zip_code,
-    status  
+    status,
+    image_url
   } = req.body;
 
   try {
@@ -287,9 +292,10 @@ router.post('/:id/edit', async (req, res) => {
           category = $3, 
           availability = $4, 
           zip_code = $5,
-          status = $6
-      WHERE listing_id = $7
-    `, [title, description, category, availability, zip_code, status, id]);
+          status = $6,
+          image_url = $7
+      WHERE listing_id = $8
+    `, [title, description, category, availability, zip_code, status, image_url || null, id]);
 
     res.redirect(`/users/${req.currentUserId}`);
   } catch (err) {
@@ -500,7 +506,8 @@ router.post('/', async (req, res) => {
     type,
     category,
     availability,
-    zip_code
+    zip_code,
+    image_url
   } = req.body;
 
   try {
@@ -521,8 +528,8 @@ router.post('/', async (req, res) => {
 
       await pool.query(
         `INSERT INTO listings
-        (user_id, tool_id, skill_id, type, title, description, category, availability, zip_code, status)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
+        (user_id, tool_id, skill_id, type, title, description, category, availability, zip_code, status, image_url)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
         [
           req.currentUserId,
           tool_id,
@@ -533,7 +540,8 @@ router.post('/', async (req, res) => {
           category,
           availability,
           zip_code,
-          'available'
+          'available',
+          image_url
         ]
       );
     } else if (type === 'skill') {
@@ -553,8 +561,8 @@ router.post('/', async (req, res) => {
 
       await pool.query(
         `INSERT INTO listings
-        (user_id, tool_id, skill_id, type, title, description, category, availability, zip_code, status)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
+        (user_id, tool_id, skill_id, type, title, description, category, availability, zip_code, status, image_url)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
         [
           req.currentUserId,
           null,
@@ -565,7 +573,8 @@ router.post('/', async (req, res) => {
           category,
           availability,
           zip_code,
-          'available'
+          'available',
+          image_url
         ]
       );
     } else {

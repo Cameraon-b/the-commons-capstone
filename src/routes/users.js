@@ -24,7 +24,7 @@ router.post('/register', async (req, res) => {
       [name, email, passwordHash, bio, zip_code]
     );
 
-    res.redirect('/users');
+    res.redirect('/users/login');
   } catch (err) {
     console.error(err);
 
@@ -91,6 +91,7 @@ router.post('/logout', (req, res) => {
 
 // GET /users
 const zipcodes = require('zipcodes');
+const { ar } = require('@faker-js/faker');
 
 router.get('/', async (req, res) => {
   try {
@@ -276,6 +277,14 @@ router.get('/:id', async (req, res) => {
       [id]
     );
 
+    const activeListings = listingsResult.rows.filter(
+      listing => listing.status !== 'unavailable'
+    );
+
+    const archivedListings = listingsResult.rows.filter(
+      listing => listing.status === 'unavailable'
+    );
+
     res.render('profile', {
       user: userResult.rows[0],
       reviews,
@@ -283,7 +292,8 @@ router.get('/:id', async (req, res) => {
       reviewCount,
       tools: toolsResult.rows,
       skills: skillsResult.rows,
-      listings: listingsResult.rows
+      listings: listingsResult.rows,
+      archivedListings
     });
 
   } catch (err) {
