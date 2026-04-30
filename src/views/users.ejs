@@ -66,40 +66,54 @@
       <div class="stack">
 
         <% users.forEach(user => { %>
-          <div class="card">
+         <div class="card user-card">
 
-            <h2><%= user.name %></h2>
+          <div class="user-card-content">
 
-            <p><%= user.bio || 'No bio yet.' %></p>
+            <!-- LEFT SIDE -->
+            <div class="user-info">
+              <h2><%= user.name %></h2>
 
-            <% if (user.distance !== undefined) { %>
-              <p class="meta">
-                <strong><%= user.distance %> miles away</strong>
-              </p>
-            <% } else { %>
-              <p class="meta">
-                <strong>Zip Code:</strong> <%= user.zip_code || 'Not provided' %>
-              </p>
-            <% } %>
+              <p><%= user.bio || 'No bio yet.' %></p>
 
-            <p class="meta">
-              <strong>Rating:</strong>
-              <%= user.average_rating ? `${user.average_rating} / 5` : 'No rating yet' %>
-              <% if (Number(user.review_count) > 0) { %>
-                (<%= user.review_count %> review<%= Number(user.review_count) === 1 ? '' : 's' %>)
+              <% if (user.distance !== undefined) { %>
+                <p class="meta">
+                  <strong><%= user.distance %> miles away</strong>
+                </p>
+              <% } else { %>
+                <p class="meta">
+                  <strong>Zip Code:</strong> <%= user.zip_code || 'Not provided' %>
+                </p>
               <% } %>
-            </p>
 
-            <div class="actions" style="margin-top: 10px;">
-              <a class="btn" href="/users/<%= user.user_id %>">View Profile</a>
+              <p class="meta">
+                <strong>Rating:</strong>
+                <%= user.average_rating ? `${user.average_rating} / 5` : 'No rating yet' %>
+                <% if (Number(user.review_count) > 0) { %>
+                  (<%= user.review_count %> review<%= Number(user.review_count) === 1 ? '' : 's' %>)
+                <% } %>
+              </p>
+
+              <div class="actions" style="margin-top: 10px;">
+                <a class="btn" href="/users/<%= user.user_id %>">View Profile</a>
+              </div>
+            </div>
+
+            <!-- RIGHT SIDE -->
+            <div class="user-image-wrapper">
+              <img 
+                src="<%= user.profile_image_url || '/images/default-avatar.png' %>" 
+                alt="<%= user.name %>" 
+                class="user-image"
+              />
             </div>
 
           </div>
-        <% }) %>
 
+        </div>
+        <% }) %>
       </div>
     <% } %>
-
   </div>
 </body>
 </html>

@@ -13,15 +13,15 @@ router.get('/register', (req, res) => {
 
 // POST /users/register
 router.post('/register', async (req, res) => {
-  const { name, email, password, bio, zip_code } = req.body;
+  const { name, email, password, bio, zip_code, profile_image_url } = req.body;
 
   try {
   const passwordHash = await bcrypt.hash(password, 10);
 
     await pool.query(
-      `INSERT INTO users (name, email, password_hash, bio, zip_code)
-       VALUES ($1, $2, $3, $4, $5)`,
-      [name, email, passwordHash, bio, zip_code]
+      `INSERT INTO users (name, email, password_hash, bio, zip_code, profile_image_url)
+       VALUES ($1, $2, $3, $4, $5, $6)`,
+      [name, email, passwordHash, bio, zip_code, profile_image_url || null]
     );
 
     res.redirect('/users/login');
@@ -91,7 +91,6 @@ router.post('/logout', (req, res) => {
 
 // GET /users
 const zipcodes = require('zipcodes');
-const { ar } = require('@faker-js/faker');
 
 router.get('/', async (req, res) => {
   try {
@@ -103,6 +102,7 @@ router.get('/', async (req, res) => {
         users.name,
         users.bio,
         users.zip_code,
+        users.profile_image_url,
         users.created_at,
         ROUND(AVG(reviews.rating)::numeric, 1) AS average_rating,
         COUNT(reviews.review_id) AS review_count
@@ -168,7 +168,7 @@ router.get('/:id/edit', async (req, res) => {
 
   try {
     const result = await pool.query(
-      'SELECT user_id, name, email, bio, zip_code FROM users WHERE user_id = $1',
+      'SELECT user_id, name, email, bio, zip_code, profile_image_url FROM users WHERE user_id = $1',
       [id]
     );
 
@@ -197,7 +197,7 @@ router.post('/:id/edit', async (req, res) => {
   }
 
   const { id } = req.params;
-  const { name, bio, zip_code } = req.body;
+  const { name, bio, zip_code, profile_image_url } = req.body;
 
   if (Number(id) !== Number(req.currentUserId)) {
     return res.render('message', {
@@ -215,10 +215,11 @@ router.post('/:id/edit', async (req, res) => {
       SET name = $1,
           bio = $2,
           zip_code = $3,
+          profile_image_url = $4,
           updated_at = CURRENT_TIMESTAMP
-      WHERE user_id = $4
+      WHERE user_id = $5
       `,
-      [name, bio, zip_code, id]
+      [name, bio, zip_code, profile_image_url || null, id]
     );
 
     req.session.userName = name;
@@ -292,7 +293,7 @@ router.get('/:id', async (req, res) => {
       reviewCount,
       tools: toolsResult.rows,
       skills: skillsResult.rows,
-      listings: listingsResult.rows,
+      listings: activeListings,
       archivedListings
     });
 

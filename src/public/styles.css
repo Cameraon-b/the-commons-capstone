@@ -634,6 +634,16 @@ hr {
   }
 }
 
+.profile-image {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin: 8px 0 16px;
+  border: 3px solid #ddd8ef;
+  display: block;
+}
+
 /* =========================
    MOBILE POLISH
 ========================= */
@@ -736,5 +746,88 @@ hr {
   .inline-form {
     flex-direction: column;
     align-items: flex-start;
+  }
+}
+
+@media (max-width: 700px) {
+  .profile-card-content {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .profile-image {
+    margin-bottom: 10px;
+  }
+}
+
+.user-card-header {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.profile-image-small {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #ddd8ef;
+  flex-shrink: 0;
+}
+
+.profile-card-content {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.profile-info {
+  flex: 1;
+}
+
+.profile-image-wrapper {
+  flex-shrink: 0;
+}
+
+.profile-image {
+  width: 140px;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #ddd8ef;
+}
+
+.user-card-content {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.user-info {
+  flex: 1;
+}
+
+.user-image-wrapper {
+  flex-shrink: 0;
+}
+
+.user-image {
+  width: 90px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #ddd8ef;
+}
+
+@media (max-width: 700px) {
+  .user-card-content {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .user-image {
+    margin-bottom: 10px;
   }
 }

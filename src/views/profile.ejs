@@ -1,7 +1,4 @@
  <!-- views/profile.ejs - EJS template for the "Profile" page, which displays the user's profile information, community reputation, tools, and skills. Users can add, edit, or delete their tools and skills. The top navigation bar includes links to the home page, listings page, and requests page. -->
-
- <% const isOwner = Number(currentUserId) === Number(user.user_id); %>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,6 +6,7 @@
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
+   <% var isOwner = Number(currentUserId) === Number(user.user_id); %>
   <div class="page">
     <div class="topbar">
       <div class="brand">The Commons</div>
@@ -23,18 +21,37 @@
     <h1 class="section-title">Your Profile</h1>
 
     <!-- Profile Info Card -->
-    <div class="card">
-      <h2><%= user.name %></h2>
+    <div class="card profile-card">
 
-      <p class="meta"><strong>Email:</strong> <%= user.email %></p>
-      <p><strong>About:</strong> <%= user.bio || 'No bio yet.' %></p>
-      <p><strong>Zip Code:</strong> <%= user.zip_code || 'Not provided' %></p>
-      <p class="meta"><strong>Member Since:</strong> <%= formatJoinDate(user.created_at) %></p>
-      <% if (isOwner) { %>
-        <div class="actions" style="margin-top: 15px;">
-          <a class="btn" href="/users/<%= user.user_id %>/edit">Edit Profile</a>
+      <div class="profile-card-content">
+
+        <!-- LEFT SIDE -->
+        <div class="profile-info">
+          <h2><%= user.name %></h2>
+
+          <p class="meta"><strong>Email:</strong> <%= user.email %></p>
+          <p><strong>About:</strong> <%= user.bio || 'No bio yet.' %></p>
+          <p><strong>Zip Code:</strong> <%= user.zip_code || 'Not provided' %></p>
+          <p class="meta"><strong>Member Since:</strong> <%= formatJoinDate(user.created_at) %></p>
+
+          <% if (isOwner) { %>
+            <div class="actions" style="margin-top: 15px;">
+              <a class="btn" href="/users/<%= user.user_id %>/edit">Edit Profile</a>
+            </div>
+          <% } %>
         </div>
-      <% } %>
+
+        <!-- RIGHT SIDE -->
+        <div class="profile-image-wrapper">
+          <img 
+            src="<%= user.profile_image_url || '/images/default-avatar.png' %>" 
+            alt="<%= user.name %>" 
+            class="profile-image"
+          />
+        </div>
+
+      </div>
+
     </div>
 
     <!-- Reviews Card -->
