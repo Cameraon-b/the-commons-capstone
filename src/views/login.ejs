@@ -1,5 +1,3 @@
-<!-- views/login.ejs - EJS template for the "Login" page, which includes a form for users to enter their email and password to log in. The page also provides a link to the registration page for users who do not have an account. The top navigation bar includes a link to the home page. -->
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,16 +6,19 @@
 </head>
 <body>
 
+  <!-- Topbar -->
   <div class="topbar">
     <div class="brand">The Commons</div>
     <div class="nav-actions">
-        <a class="btn secondary" href="/">Home</a>
-      </div>
+      <a class="btn secondary" href="/">Home</a>
     </div>
   </div>
 
-  <div class="smallpage">
-    <div class="card" style="max-width: 400px; margin: 0 auto;">
+  <!-- Main Auth Layout -->
+  <div class="auth-page">
+
+    <!-- LEFT: Login Card (UNCHANGED STRUCTURE) -->
+    <div class="card auth-form-card">
       <h1>Login</h1>
 
       <form action="/users/login" method="POST">
@@ -35,11 +36,49 @@
         <button type="submit" class="btn">Login</button>
       </form>
 
-      <br />
-
-      <p>Don't have an account?</p>
-      <a href="/users/register">Register here</a>
+      <p class="meta" style="margin-top: 12px;">
+        Don’t have an account? 
+        <a href="/users/register">Register</a>
+      </p>
     </div>
+
+    <!-- RIGHT: Onboarding Card -->
+    <div class="card register-info-card">
+      <h2>Step Into The Commons</h2>
+
+      <p class="meta">
+        The Commons helps people share tools and skills locally, building networks of trust and mutual support.
+      </p>
+
+      <div class="stack register-steps">
+
+        <div class="step-item">
+          <p class="step-title">1. Create an Account</p>
+          <p class="meta">Set up your profile and join the community.</p>
+        </div>
+
+        <div class="step-item">
+          <p class="step-title">2. Build Your Inventory</p>
+          <p class="meta">Add tools you own and skills you can offer.</p>
+        </div>
+
+        <div class="step-item">
+          <p class="step-title">3. Create Listings</p>
+          <p class="meta">Make your tools and skills available to others nearby.</p>
+        </div>
+
+        <div class="step-item">
+          <p class="step-title">4. Share and Collaborate</p>
+          <p class="meta">Connect through requests and build trust through reviews.</p>
+        </div>
+
+        <p class="meta" style="margin-top: 10px;">
+          Start small. One tool or skill can make a difference in your community.
+        </p>
+
+      </div>
+    </div>
+
   </div>
 
 </body>
