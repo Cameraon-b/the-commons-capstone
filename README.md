@@ -29,6 +29,7 @@ Current focus is on:
 - Profile
   - Personal inventory
   - Reviews & Rating
+  - Profile Picture
 - Listings
   - Create listings from inventory
   - Status & Availability
@@ -36,6 +37,7 @@ Current focus is on:
   - Accept, Decline requests
   - Complete Exchanges
   - Rating & Feedback
+  - Listing Image
 - Request notifications
   - New
   - Accepted
