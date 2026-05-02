@@ -18,10 +18,17 @@ router.get('/', async (req, res) => {
   try {
     const incomingResult = await pool.query(
       `
-      SELECT requests.*, listings.title AS listing_title, users.name AS requester_name
+      SELECT 
+        requests.*, 
+        listings.title AS listing_title, 
+        users.name AS requester_name,
+        reviews.review_id AS user_review_id
       FROM requests
       JOIN listings ON requests.listing_id = listings.listing_id
       JOIN users ON requests.requester_id = users.user_id
+      LEFT JOIN reviews 
+        ON reviews.request_id = requests.request_id
+        AND reviews.reviewer_id = $1
       WHERE requests.owner_id = $1
       ORDER BY requests.created_at DESC
       `,
@@ -30,10 +37,13 @@ router.get('/', async (req, res) => {
 
     const outgoingResult = await pool.query(
       `
-      SELECT requests.*, listings.title AS listing_title, users.name AS owner_name
+      SELECT requests.*, listings.title AS listing_title, users.name AS owner_name, reviews.review_id AS user_review_id
       FROM requests
       JOIN listings ON requests.listing_id = listings.listing_id
       JOIN users ON requests.owner_id = users.user_id
+      LEFT JOIN reviews 
+        ON reviews.request_id = requests.request_id
+        AND reviews.reviewer_id = $1
       WHERE requests.requester_id = $1
       ORDER BY requests.created_at DESC
       `,
@@ -64,7 +74,12 @@ router.get('/', async (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    res.send('Error loading requests');
+    res.render('message', {
+      title: 'Error Loading Requests',
+      message: 'An error occurred while loading requests.',
+      actionText: 'Back to Home',
+      actionHref: '/'
+    });
   }
 });
 
@@ -89,7 +104,12 @@ router.post('/:id/accept', async (req, res) => {
     );
 
     if (requestResult.rows.length === 0) {
-      return res.send('Request not found');
+      return res.render('message', {
+        title: 'Request Not Found',
+        message: 'The request you are trying to manage does not exist.',
+        actionText: 'Back to Requests',
+        actionHref: '/requests'
+      });
     }
 
     const request = requestResult.rows[0];
@@ -101,7 +121,12 @@ router.post('/:id/accept', async (req, res) => {
     );
 
     if (listingResult.rows.length === 0) {
-      return res.send('Listing not found');
+      return res.render('message', {
+        title: 'Listing Not Found',
+        message: 'The listing for this request could not be found.',
+        actionText: 'Back to Requests',
+        actionHref: '/requests'
+      });
     }
 
     const listing = listingResult.rows[0];
@@ -144,7 +169,12 @@ router.post('/:id/accept', async (req, res) => {
     res.redirect('/requests');
   } catch (err) {
     console.error(err);
-    res.send('Error accepting request');
+    res.render('message', {
+      title: 'Error Accepting Request',
+      message: 'An error occurred while accepting the request.',
+      actionText: 'Back to Requests',
+      actionHref: '/requests'
+    });
   }
 });
 
@@ -169,7 +199,12 @@ router.post('/:id/decline', async (req, res) => {
     );
 
     if (requestResult.rows.length === 0) {
-      return res.send('Request not found');
+      return res.render('message', {
+        title: 'Request Not Found',
+        message: 'The request you are trying to manage does not exist.',
+        actionText: 'Back to Requests',
+        actionHref: '/requests'
+      });
     }
 
     const request = requestResult.rows[0];
@@ -181,7 +216,12 @@ router.post('/:id/decline', async (req, res) => {
     );
 
     if (listingResult.rows.length === 0) {
-      return res.send('Listing not found');
+      return res.render('message', {
+        title: 'Listing Not Found',
+        message: 'The listing for this request could not be found.',
+        actionText: 'Back to Requests',
+        actionHref: '/requests'
+      });
     }
 
     const listing = listingResult.rows[0];
@@ -214,7 +254,12 @@ router.post('/:id/decline', async (req, res) => {
     res.redirect('/requests');
   } catch (err) {
     console.error(err);
-    res.send('Error declining request');
+    res.render('message', {
+      title: 'Error Declining Request',
+      message: 'An error occurred while declining the request.',
+      actionText: 'Back to Requests',
+      actionHref: '/requests'
+    });
   }
 });
 
@@ -239,7 +284,12 @@ router.post('/:id/complete', async (req, res) => {
     );
 
     if (requestResult.rows.length === 0) {
-      return res.send('Request not found');
+      return res.render('message', {
+        title: 'Request Not Found',
+        message: 'The request you are trying to manage does not exist.',
+        actionText: 'Back to Requests',
+        actionHref: '/requests'
+      });
     }
 
     const request = requestResult.rows[0];
@@ -251,7 +301,12 @@ router.post('/:id/complete', async (req, res) => {
     );
 
     if (listingResult.rows.length === 0) {
-      return res.send('Listing not found');
+      return res.render('message', {
+        title: 'Listing Not Found',
+        message: 'The listing for this request could not be found.',
+        actionText: 'Back to Requests',
+        actionHref: '/requests'
+      });
     }
 
     const listing = listingResult.rows[0];
@@ -294,7 +349,12 @@ router.post('/:id/complete', async (req, res) => {
     res.redirect('/requests');
   } catch (err) {
     console.error(err);
-    res.send('Error completing request');
+    res.render('message', {
+      title: 'Error Completing Request',
+      message: 'An error occurred while completing the request.',
+      actionText: 'Back to Requests',
+      actionHref: '/requests'
+    });
   }
 });
 

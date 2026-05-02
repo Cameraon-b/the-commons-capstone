@@ -87,7 +87,12 @@ router.get('/:requestId/new', async (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    res.send('Error loading review form');
+    res.render('message', {
+      title: 'Error Loading Review Form',
+      message: 'An error occurred while loading the review form.',
+      actionText: 'Back to Requests',
+      actionHref: '/requests'
+    });
   }
 });
 
@@ -173,7 +178,12 @@ router.post('/:requestId', async (req, res) => {
     res.redirect('/requests');
   } catch (err) {
     console.error(err);
-    res.send('Error submitting review');
+    res.render('message', {
+      title: 'Error Submitting Review',
+      message: 'An error occurred while submitting the review.',
+      actionText: 'Back to Requests',
+      actionHref: '/requests'
+    });
   }
 });
 

@@ -26,6 +26,7 @@
             id="name" 
             name="name" 
             value="<%= user.name %>" 
+            maxlength="50"
             required
           />
         </div>
@@ -36,6 +37,7 @@
             id="bio" 
             name="bio" 
             rows="5"
+            maxlength="500"
           ><%= user.bio || '' %></textarea>
         </div>
 
@@ -46,6 +48,7 @@
             id="zip_code" 
             name="zip_code" 
             value="<%= user.zip_code || '' %>" 
+            maxlength="5"
           />
         </div>
 

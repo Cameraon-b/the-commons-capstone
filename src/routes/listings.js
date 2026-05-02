@@ -81,7 +81,12 @@ router.get('/', async (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    res.send('Error loading listings');
+    res.render('message', {
+      title: 'Error Loading Listings',
+      message: 'An error occurred while loading listings.',
+      actionText: 'Back to Home',
+      actionHref: '/'
+    });
   }
 });
 
@@ -207,7 +212,12 @@ router.get('/create', async (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    res.send('Error loading listing form');
+    res.render('message', {
+      title: 'Error Loading Listing Form',
+      message: 'An error occurred while loading the listing form.',
+      actionText: 'Back to Home',
+      actionHref: '/'
+    });
   }
 });
 
@@ -230,7 +240,12 @@ router.get('/:id/edit', async (req, res) => {
     `, [id]);
 
     if (result.rows.length === 0) {
-      return res.status(404).send('Listing not found');
+      return res.render('message', {
+        title: 'Listing Not Found',
+        message: 'The listing you are trying to edit does not exist.',
+        actionText: 'Back to Profile',
+        actionHref: `/users/${req.currentUserId}`
+      });
     }
 
     const listing = result.rows[0];
@@ -244,7 +259,12 @@ router.get('/:id/edit', async (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    res.send('Error loading listing edit form');
+    res.render('message', {
+      title: 'Error Loading Listing Edit Form',
+      message: 'An error occurred while loading the listing edit form.',
+      actionText: 'Back to Profile',
+      actionHref: `/users/${req.currentUserId}`
+    });
   }
 });
 
@@ -276,13 +296,23 @@ router.post('/:id/edit', async (req, res) => {
     `, [id]);
 
     if (result.rows.length === 0) {
-      return res.status(404).send('Listing not found');
+      return res.render('message', {
+        title: 'Listing Not Found',
+        message: 'The listing you are trying to edit does not exist.',
+        actionText: 'Back to Profile',
+        actionHref: `/users/${req.currentUserId}`
+      });
     }
 
     const listing = result.rows[0];
 
     if (listing.user_id !== req.currentUserId) {
-      return res.status(403).send('You cannot edit this listing.');
+      return res.render('message', {
+        title: 'Permission Denied',
+        message: 'You cannot edit this listing.',
+        actionText: 'Back to Profile',
+        actionHref: `/users/${req.currentUserId}`
+      });
     }
 
     await pool.query(`
@@ -300,7 +330,12 @@ router.post('/:id/edit', async (req, res) => {
     res.redirect(`/users/${req.currentUserId}`);
   } catch (err) {
     console.error(err);
-    res.send('Error updating listing');
+    res.render('message', {
+      title: 'Error Updating Listing',
+      message: 'An error occurred while updating the listing.',
+      actionText: 'Back to Profile',
+      actionHref: `/users/${req.currentUserId}`
+    });
   }
 });
 
@@ -323,7 +358,12 @@ router.post('/:id/delete', async (req, res) => {
     `, [id]);
 
     if (result.rows.length === 0) {
-      return res.status(404).send('Listing not found');
+      return res.render('message', {
+        title: 'Listing Not Found',
+        message: 'The listing you are trying to delete does not exist.',
+        actionText: 'Back to Profile',
+        actionHref: `/users/${req.currentUserId}`
+      });
     }
 
     const listing = result.rows[0];
@@ -483,7 +523,12 @@ router.post('/:id/request', async (req, res) => {
     res.redirect('/listings');
   } catch (err) {
     console.error(err);
-    res.send('Error creating request');
+    res.render('message', {
+      title: 'Error Creating Request',
+      message: 'An error occurred while creating the request.',
+      actionText: 'Back to Listings',
+      actionHref: '/listings'
+    });
   }
 });
 
@@ -589,7 +634,12 @@ router.post('/', async (req, res) => {
     res.redirect('/listings');
   } catch (err) {
     console.error(err);
-    res.send('Error creating listing');
+    res.render('message', {
+      title: 'Error Creating Listing',
+      message: 'An error occurred while creating the listing.',
+      actionText: 'Back to Listings',
+      actionHref: '/listings'
+    });
   }
 });
 

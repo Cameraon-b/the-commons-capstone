@@ -74,7 +74,9 @@
             <div class="user-info">
               <h2><%= user.name %></h2>
 
-              <p><%= user.bio || 'No bio yet.' %></p>
+              <p class="meta wrapped-text">
+                <%= user.bio || 'No bio yet.' %>
+              </p>
 
               <% if (user.distance !== undefined) { %>
                 <p class="meta">

@@ -43,14 +43,24 @@ router.post('/', async (req, res) => {
     res.redirect(`/users/${req.currentUserId}`);
   } catch (err) {
     console.error(err);
-    res.send('Error creating skill');
+    res.render('message', {
+      title: 'Error Creating Skill',
+      message: 'An error occurred while creating the skill.',
+      actionText: 'Try Again',
+      actionHref: '/skills/new'
+    });
   }
 });
 
 // POST /skills/:id/delete
 router.post('/:id/delete', async (req, res) => {
   if (!req.currentUserId) {
-    return res.redirect('/users/login');
+    return res.render('message', {
+      title: 'Login Required',
+      message: 'You must be logged in to delete a skill.',
+      actionText: 'Login',
+      actionHref: '/users/login'
+    });
   }
 
   const { id } = req.params;
@@ -62,13 +72,23 @@ router.post('/:id/delete', async (req, res) => {
     );
 
     if (result.rows.length === 0) {
-      return res.status(404).send('Skill not found');
+      return res.render('message', {
+        title: 'Skill Not Found',
+        message: 'The skill you are trying to delete does not exist.',
+        actionText: 'Back to Profile',
+        actionHref: `/users/${req.currentUserId}`
+      });
     }
 
     const skill = result.rows[0];
 
     if (skill.user_id !== req.currentUserId) {
-      return res.status(403).send('Not authorized to delete this skill');
+      return res.render('message', {
+        title: 'Access Denied',
+        message: 'You are not authorized to delete this skill.',
+        actionText: 'Back to Profile',
+        actionHref: `/users/${req.currentUserId}`
+      });
     }
 
     await pool.query(
@@ -79,7 +99,12 @@ router.post('/:id/delete', async (req, res) => {
     res.redirect(`/users/${req.currentUserId}`);
   } catch (err) {
     console.error(err);
-    res.send('Error deleting skill');
+    res.render('message', {
+      title: 'Error Deleting Skill',
+      message: 'An error occurred while deleting the skill.',
+      actionText: 'Back to Profile',
+      actionHref: `/users/${req.currentUserId}`
+    });
   }
 });
 

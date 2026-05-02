@@ -34,7 +34,12 @@ router.get('/', async (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    res.send('Error loading notifications');
+    res.render('message', {
+      title: 'Error Loading Notifications',
+      message: 'An error occurred while loading notifications.',
+      actionText: 'Back to Home',
+      actionHref: '/'
+    });
   }
 });
 
@@ -57,7 +62,12 @@ router.post('/:id/read', async (req, res) => {
     res.redirect('/notifications');
   } catch (err) {
     console.error(err);
-    res.send('Error updating notification');
+    res.render('message', {
+      title: 'Error Updating Notification',
+      message: 'An error occurred while updating the notification.',
+      actionText: 'Back to Notifications',
+      actionHref: '/notifications'
+    });
   }
 });
 
@@ -78,7 +88,12 @@ router.post('/read-all', async (req, res) => {
     res.redirect('/notifications');
   } catch (err) {
     console.error(err);
-    res.send('Error updating notifications');
+    res.render('message', {
+      title: 'Error Updating Notifications',
+      message: 'An error occurred while updating notifications.',
+      actionText: 'Back to Notifications',
+      actionHref: '/notifications'
+    });
   }
 });
 
@@ -116,7 +131,12 @@ router.get('/:id/open', async (req, res) => {
 
   } catch (err) {
     console.error(err);
-    res.send('Error opening notification');
+    res.render('message', {
+      title: 'Error Opening Notification',
+      message: 'An error occurred while opening the notification.',
+      actionText: 'Back to Notifications',
+      actionHref: '/notifications'
+    });
   }
 });
 

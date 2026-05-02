@@ -83,6 +83,7 @@
               name="title"
               value="<%= formData.title %>"
               required
+              maxlength="75"
             >
           </div>
 
@@ -93,6 +94,7 @@
               name="description"
               rows="4"
               required
+              maxlength="500"
             ><%= formData.description %></textarea>
           </div>
 
@@ -103,6 +105,7 @@
               id="category"
               name="category"
               value="<%= formData.category %>"
+              maxlength="30"
             >
           </div>
 
@@ -114,6 +117,7 @@
               name="availability"
               value="<%= formData.availability %>"
               placeholder="Example: Weekends, evenings, flexible"
+              maxlength="100"
             >
           </div>
 
@@ -125,6 +129,7 @@
               name="zip_code"
               value="<%= formData.zip_code %>"
               required
+              maxlength="5"
             >
           </div>
 
