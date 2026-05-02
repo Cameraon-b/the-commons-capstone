@@ -82,14 +82,15 @@
       <hr />
 
       <!-- DESCRIPTION stays full width -->
-      <p><strong>Description:</strong></p>
-      <p><%= listing.description %></p>
+      <p class="wrapped-text">
+        <strong>Description:</strong> <%= listing.description || 'No description provided.' %>
+      </p>
 
       <p><strong>Category:</strong> <%= listing.category %></p>
       <p><strong>Availability:</strong> <%= listing.availability %></p>
       <hr />
 
-      <h2>Recent Reviews</h2>
+      <h2>Recent Reviews of Exchanges With <%= listing.name %></h2>
 
       <% if (!reviews || reviews.length === 0) { %>
         <p class="meta"> <%= listing.name %> has no reviews yet.</p>

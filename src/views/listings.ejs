@@ -96,7 +96,7 @@
                 <a href="/listings/<%= listing.listing_id %>"><%= listing.title %></a>
               </div>
 
-              <p><%= listing.description %></p>
+              <p class="wrapped-text"><%= listing.description || 'No description provided.' %></p>
 
               <p class="meta"><strong>Posted by:</strong> <%= listing.name %></p>
 

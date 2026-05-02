@@ -15,13 +15,24 @@ router.get('/register', (req, res) => {
 router.post('/register', async (req, res) => {
   const { name, email, password, bio, zip_code, profile_image_url } = req.body;
 
+  const cleanedZip = zip_code.trim();
+
+  if (!/^\d{5}$/.test(cleanedZip)) {
+    return res.render('message', {
+      title: 'Invalid Zip Code',
+      message: 'Zip code must be exactly 5 digits.',
+      actionText: 'Try Again',
+      actionHref: '/users/register'
+    });
+}
+
   try {
   const passwordHash = await bcrypt.hash(password, 10);
 
     await pool.query(
       `INSERT INTO users (name, email, password_hash, bio, zip_code, profile_image_url)
        VALUES ($1, $2, $3, $4, $5, $6)`,
-      [name, email, passwordHash, bio, zip_code, profile_image_url || null]
+      [name, email, passwordHash, bio, cleanedZip, profile_image_url || null]
     );
 
     res.redirect('/users/login');
@@ -29,13 +40,20 @@ router.post('/register', async (req, res) => {
     console.error(err);
 
     if (err.code === '23505') {
-      return res.send(`
-        <h2>Email already exists</h2>
-        <a href="/users/register">Go back</a>
-      `);
+      return res.render('message', {
+        title: 'Email Already Exists',
+        message: 'The email you entered is already registered.',
+        actionText: 'Try Again',
+        actionHref: '/users/register'
+      });
     }
 
-    res.send('Error creating user');
+    res.render('message', {
+      title: 'Error Creating User',
+      message: 'An error occurred while creating the user.',
+      actionText: 'Try Again',
+      actionHref: '/users/register'
+    });
   }
 });
 
@@ -55,10 +73,12 @@ router.post('/login', async (req, res) => {
     );
 
     if (result.rows.length === 0) {
-      return res.send(`
-        <h2>No user found with that email</h2>
-        <a href="/users/login">Try again</a>
-      `);
+      return res.render('message', {
+        title: 'User Not Found',
+        message: 'No user found with that email.',
+        actionText: 'Try Again',
+        actionHref: '/users/login'
+      });
     }
 
     const user = result.rows[0];
@@ -66,10 +86,12 @@ router.post('/login', async (req, res) => {
     const passwordMatch = await bcrypt.compare(password, user.password_hash);
 
     if (!passwordMatch) {
-      return res.send(`
-        <h2>Incorrect password</h2>
-        <a href="/users/login">Try again</a>
-      `);
+      return res.render('message', {
+        title: 'Incorrect Password',
+        message: 'The password you entered is incorrect.',
+        actionText: 'Try Again',
+        actionHref: '/users/login'
+      });
     }
 
     req.session.userId = user.user_id;
@@ -78,7 +100,12 @@ router.post('/login', async (req, res) => {
     res.redirect('/');
   } catch (err) {
     console.error(err);
-    res.send('Login error');
+    res.render('message', {
+      title: 'Login Error',
+      message: 'An error occurred while logging in.',
+      actionText: 'Try Again',
+      actionHref: '/users/login'
+    });
   }
 });
 
@@ -173,7 +200,12 @@ router.get('/:id/edit', async (req, res) => {
     );
 
     if (result.rows.length === 0) {
-      return res.status(404).send('User not found');
+      return res.render('message', {
+        title: 'User Not Found',
+        message: 'The user you are trying to edit does not exist.',
+        actionText: 'Back to Users',
+        actionHref: '/users'
+      });
     }
 
     res.render('edit-profile', {
@@ -198,6 +230,16 @@ router.post('/:id/edit', async (req, res) => {
 
   const { id } = req.params;
   const { name, bio, zip_code, profile_image_url } = req.body;
+  const cleanedZip = zip_code.trim();
+
+  if (!/^\d{5}$/.test(cleanedZip)) {
+    return res.render('message', {
+      title: 'Invalid Zip Code',
+      message: 'Zip code must be exactly 5 digits.',
+      actionText: 'Try Again',
+      actionHref: `/users/${id}/edit`
+    });
+  }
 
   if (Number(id) !== Number(req.currentUserId)) {
     return res.render('message', {
@@ -219,7 +261,7 @@ router.post('/:id/edit', async (req, res) => {
           updated_at = CURRENT_TIMESTAMP
       WHERE user_id = $5
       `,
-      [name, bio, zip_code, profile_image_url || null, id]
+      [name, bio, cleanedZip, profile_image_url || null, id]
     );
 
     req.session.userName = name;
@@ -242,7 +284,12 @@ router.get('/:id', async (req, res) => {
     );
 
     if (userResult.rows.length === 0) {
-      return res.status(404).send('User not found');
+      return res.render('message', {
+        title: 'User Not Found',
+        message: 'The user you are trying to view does not exist.',
+        actionText: 'Back to Users',
+        actionHref: '/users'
+      });
     }
 
     const reviews = await getUserReviews(id);
@@ -299,7 +346,12 @@ router.get('/:id', async (req, res) => {
 
   } catch (err) {
     console.error(err);
-    res.send('Error retrieving profile');
+    res.render('message', {
+      title: 'Error',
+      message: 'An error occurred while retrieving the profile.',
+      actionText: 'Back to Users',
+      actionHref: '/users'
+    });
   }
 });
 

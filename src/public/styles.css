@@ -496,10 +496,12 @@ hr {
   display: flex;
   gap: 16px;
   align-items: flex-start;
+  min-width: 0;
 }
 
 .listing-text {
   flex: 1;
+  min-width: 0;
 }
 
 .listing-image-wrapper {
@@ -516,7 +518,7 @@ hr {
 
 .listing-text p {
   max-height: 60px;
-  overflow: hidden;
+  overflow: visible;
   text-overflow: ellipsis;
 }
 
@@ -708,6 +710,10 @@ hr {
     flex-direction: column;
   }
 
+  .listing-card {
+    overflow: visible;
+  }
+
   .listing-image-wrapper {
     width: 100%;
   }
@@ -820,6 +826,8 @@ hr {
   border: 3px solid #ddd8ef;
 }
 
+
+
 @media (max-width: 700px) {
   .user-card-content {
     flex-direction: column;
@@ -830,4 +838,46 @@ hr {
   .user-image {
     margin-bottom: 10px;
   }
+}
+
+.inventory-title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
+
+.wrapped-text {
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+.profile-about {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.profile-field {
+  display: block;
+  margin: 8px 0;
+  padding: 0;
+}
+
+.profile-field .wrapped-text {
+  display: inline;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.user-card,
+.user-card-content,
+.user-info {
+  min-width: 0;
+}
+
+.user-card .wrapped-text {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }

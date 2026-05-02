@@ -43,14 +43,24 @@ router.post('/', async (req, res) => {
     res.redirect(`/users/${req.currentUserId}`);
   } catch (err) {
     console.error(err);
-    res.send('Error creating tool');
+    res.render('message', {
+      title: 'Error Creating Tool',
+      message: 'An error occurred while creating the tool.',
+      actionText: 'Try Again',
+      actionHref: '/tools/new'
+    });
   }
 });
 
 // POST /tools/:id/delete
 router.post('/:id/delete', async (req, res) => {
   if (!req.currentUserId) {
-    return res.redirect('/users/login');
+    return res.render('message', {
+      title: 'Login Required',
+      message: 'You must be logged in to delete a tool.',
+      actionText: 'Login',
+      actionHref: '/users/login'
+    });
   }
 
   const { id } = req.params;
@@ -62,13 +72,23 @@ router.post('/:id/delete', async (req, res) => {
     );
 
     if (result.rows.length === 0) {
-      return res.status(404).send('Tool not found');
+      return res.render('message', {
+        title: 'Tool Not Found',
+        message: 'The tool you are trying to delete does not exist.',
+        actionText: 'Back to Profile',
+        actionHref: `/users/${req.currentUserId}`
+      });
     }
 
     const tool = result.rows[0];
 
     if (tool.user_id !== req.currentUserId) {
-      return res.status(403).send('Not authorized to delete this tool');
+      return res.render('message', {
+        title: 'Access Denied',
+        message: 'You are not authorized to delete this tool.',
+        actionText: 'Back to Profile',
+        actionHref: `/users/${req.currentUserId}`
+      });
     }
 
     await pool.query(
@@ -79,7 +99,12 @@ router.post('/:id/delete', async (req, res) => {
     res.redirect(`/users/${req.currentUserId}`);
   } catch (err) {
     console.error(err);
-    res.send('Error deleting tool');
+    res.render('message', {
+      title: 'Error Deleting Tool',
+      message: 'An error occurred while deleting the tool.',
+      actionText: 'Back to Profile',
+      actionHref: `/users/${req.currentUserId}`
+    });
   }
 });
 

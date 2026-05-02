@@ -125,7 +125,7 @@
                 <p class="meta"><%= formatTimestamp(request.created_at) %></p>
                 <p><strong>Status:</strong> <%= request.status %></p>
 
-                <% if (request.status === 'completed') { %>
+                <% if (request.status === 'completed' && !request.user_review_id) { %>
                   <div class="actions">
                     <a href="/reviews/<%= request.request_id %>/new" class="btn secondary">Leave Review</a>
                   </div>
