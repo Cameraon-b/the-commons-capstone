@@ -82,9 +82,12 @@
       <hr />
 
       <!-- DESCRIPTION stays full width -->
-      <p class="wrapped-text">
-        <strong>Description:</strong> <%= listing.description || 'No description provided.' %>
-      </p>
+      <div class="detail-field meta">
+        <strong>Description:</strong>
+        <span class="wrapped-text">
+          <%= listing.description || 'No description provided.' %>
+        </span>
+      </div>
 
       <p><strong>Category:</strong> <%= listing.category %></p>
       <p><strong>Availability:</strong> <%= listing.availability %></p>
