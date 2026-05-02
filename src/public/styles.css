@@ -161,7 +161,7 @@ a {
 }
 
 .meta {
-  color: #5f5b70;
+  color: #222;
   margin: 8px 0;
   line-height: 1.45;
 }
@@ -880,4 +880,32 @@ hr {
   white-space: normal;
   overflow-wrap: anywhere;
   word-break: break-word;
+}
+
+.detail-field {
+  display: block;
+  margin: 8px 0;
+  padding: 0;
+}
+
+.detail-field .wrapped-text {
+  display: inline;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.detail-field {
+  color: #222;
+  font-weight: 400;
+}
+
+.detail-field strong {
+  color: #222;
+  font-weight: 700;
+}
+
+.detail-field span {
+  color: #222;
+  font-weight: 400;
 }
