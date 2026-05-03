@@ -1,0 +1,53 @@
+# The Commons – Defect Log
+
+Developer: Cameron Beck  
+Project: The Commons  
+Course: COSC 498 Capstone  
+Date: May 1, 2026
+
+---
+
+## Severity Scale
+
+| Level | Description |
+|-------|-------------|
+| High | Core functionality affected |
+| Medium | Feature usable but incorrect behavior |
+| Low | Cosmetic, wording, or UX issue |
+
+---
+
+## Defect Log
+
+| ID | Date | Severity | Module | Description | Expected Result | Actual Result | Resolution | Status |
+|----|------|----------|--------|-------------|-----------------|---------------|------------|--------|
+| DEF-001 | 2026-04-26 | Medium | User Registration | ZIP code field accepted invalid formats | ZIP should require exactly 5 numeric digits | Users could submit invalid ZIP codes | Added frontend and backend ZIP validation | Closed |
+| DEF-002 | 2026-04-26 | Medium | Inventory | Tool and skill titles were not rendering consistently in listing cards | Titles should render with proper spacing and alignment | Titles appeared misaligned or wrapped inconsistently | Updated card layout and text styling | Closed |
+| DEF-003 | 2026-04-27 | Medium | Forms | Validation errors were missing or inconsistently displayed | Users should receive clear validation feedback | Some forms failed silently or showed raw server errors | Implemented standardized error messaging views | Closed |
+| DEF-004 | 2026-04-27 | Medium | Forms | Text fields allowed unlimited character input | Fields should enforce reasonable input limits | Excessively long text caused layout issues | Added character limits and validation rules | Closed |
+| DEF-005 | 2026-04-28 | Low | UI Copy | Review section text displayed confusing wording ("on recent reviews") | Text should read naturally and clearly | Wording was grammatically awkward | Updated interface copy for clarity | Closed |
+| DEF-006 | 2026-04-28 | Medium | Reviews | Review button remained visible after exchange was already reviewed | Users should only be able to review once | Review action remained visible after submission | Added conditional rendering based on review status | Closed |
+| DEF-007 | 2026-04-29 | Medium | Profile UI | Bio and description text overflowed cards on longer entries | Text should wrap within container boundaries | Text extended outside cards on desktop/mobile | Added CSS wrapping and overflow handling | Closed |
+| DEF-008 | 2026-04-29 | Low | UI Layout | Form labels and input fields were visually misaligned | Form elements should align consistently | Some labels/inputs shifted relative to others | Updated shared form styling and spacing | Closed |
+| DEF-009 | 2026-04-30 | Low | Navigation | Navbar button spacing inconsistent across screen sizes | Navigation should remain consistent across breakpoints | Buttons shifted on smaller screens | Updated responsive CSS rules | Closed |
+| DEF-010 | 2026-05-01 | Medium | Listings | Long listing descriptions caused inconsistent card heights | Cards should maintain consistent layout | Cards stretched unevenly | Added max lengths and improved flex styling | Closed |
+
+---
+
+## Testing Summary
+
+Total Defects Identified: 10
+
+| Severity | Count |
+|----------|-------|
+| High | 0 |
+| Medium | 7 |
+| Low | 3 |
+
+All identified defects were reproduced, documented, corrected, and retested prior to final production deployment.
+
+---
+
+## Key Lesson Learned
+
+Formal testing revealed that many of the most important improvements were not major system failures, but smaller usability, validation, and interface issues that significantly improved the overall user experience and production readiness of the application.
