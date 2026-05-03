@@ -7,6 +7,8 @@ const path = require("path");
 const session = require("express-session");
 require("dotenv").config();
 
+
+// Import route handlers
 const listingsRoutes = require("./routes/listings");
 const usersRoutes = require("./routes/users");
 const requestsRoutes = require("./routes/requests");
@@ -21,6 +23,7 @@ const PORT = process.env.PORT || 3000;
 
 const pool = require("./config/db");
 
+// Helper functions for formatting dates and timestamps
 function formatTimestamp(date) {
   if (!date) return "";
 
@@ -61,7 +64,7 @@ function formatJoinDate(date) {
   });
 }
 
-// middleware
+// middleware for parsing request bodies and managing sessions
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 
@@ -75,7 +78,7 @@ app.locals.formatTimestamp = formatTimestamp;
 app.locals.formatDate = formatDate;
 app.locals.formatJoinDate = formatJoinDate;
 
-// current user from session
+// current user from session is made available in all views and routes via req.currentUserId and res.locals.currentUserId
 app.use((req, res, next) => {
   req.currentUserId = req.session.userId || null;
   res.locals.currentUserId = req.session.userId || null;

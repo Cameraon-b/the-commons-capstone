@@ -29,6 +29,9 @@ The goal of this project is to see how technology can support resource sharing a
  - views/ EJS templates
 - docs/ design materials
 
+## Development Notes
+AI tools (ChatGPT and GitHub Copilot) were used as support resources during development for generating code, debugging, troubleshooting, exploring UI/UX, and architectural decisions. All generated code was reviewed, modified, and tested by me.
+
 ## Status
 
 - Version 1.0 deployed and tested for capstone demonstration.
@@ -66,7 +69,3 @@ Current focus:
 
 ## docs/
 The docs/ folder contains design materials including but not limited to wireframes, workflow diagrams, database schema, and test plans.
-
-## Development Notes
-AI tools (ChatGPT and GitHub Copilot) were used as support resources during development for generating code, debugging, troubleshooting, exploring UI/UX, and architectural decisions. All generated code was reviewed, modified, and tested by me.
-
