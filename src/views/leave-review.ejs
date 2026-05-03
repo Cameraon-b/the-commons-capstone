@@ -1,4 +1,4 @@
-<!-- views/leave-review.ejs - EJS template for the "Leave Review" page, allowing users to leave a review for a completed exchange. The page includes a form for entering a rating and a comment. It also provides navigation links to the home page, requests page, and user profile if the user is logged in. -->
+<!-- views/leave-review.ejs - This template renders the page for leaving a review after an exchange has been completed. The form includes a dropdown for selecting a rating from 1 to 5 and a textarea for writing a comment. The title of the page dynamically includes the name of the user being reviewed. -->
 
 <!DOCTYPE html>
 <html>
@@ -11,6 +11,7 @@
     <div class="topbar">
       <div class="brand">The Commons</div>
 
+      <!-- Navigation links for the top bar, buttons for home, return to requests, and profile if the user is logged in. -->
       <div class="nav-actions">
         <a class="btn secondary" href="/">Home</a>
         <a class="btn secondary" href="/requests">Return to Requests</a>
@@ -20,6 +21,7 @@
       </div>
     </div>
 
+    <!-- Form for leaving a review, including a dropdown for rating and a textarea for comments. -->
     <h1 class="section-title">Leave a Review for <%= reviewedUser.name %></h1>
 
     <div class="card">

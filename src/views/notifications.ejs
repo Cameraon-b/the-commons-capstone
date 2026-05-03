@@ -1,4 +1,4 @@
-<!-- views/notifications.ejs - EJS template for the "Notifications" page, which displays a list of unread and read notifications for the current user. Users can mark notifications as read or view the details of a notification. The top navigation bar includes links to the home page, listings page, requests page, and user profile. -->
+<!-- views/notifications.ejs - This template renders the notifications page, which displays a list of unread and read notifications for the current user. Users can mark notifications as read or view the details of a notification. The top navigation bar includes links to the home page, listings page, requests page, and user profile. -->
 
 <!DOCTYPE html>
 <html>
@@ -10,7 +10,8 @@
   <div class="page">
     <div class="topbar">
       <div class="brand">The Commons</div>
-
+      
+      <!-- Navigation links for the top bar, buttons for home, listings, requests, and profile. -->
       <div class="nav-actions">
         <a class="btn secondary" href="/">Home</a>
         <a class="btn secondary" href="/listings">Listings</a>
@@ -22,6 +23,7 @@
     <div style="display:flex; justify-content:space-between; align-items:center; gap: 12px; flex-wrap: wrap;">
       <h1 class="section-title">Notifications</h1>
 
+        <!-- Button to mark all notifications as read, only shown if there are any notifications. -->
       <% if ((unreadNotifications.length + readNotifications.length) > 0) { %>
         <form action="/notifications/read-all" method="POST">
           <button class="btn secondary" type="submit">Mark All Read</button>
@@ -29,6 +31,7 @@
       <% } %>
     </div>
 
+    <!-- Section displaying unread and read notifications in separate columns. If there are no notifications, a message is shown instead. -->
     <% if ((unreadNotifications.length + readNotifications.length) === 0) { %>
       <div class="card">
         <p class="meta">No notifications yet.</p>

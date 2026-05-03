@@ -1,4 +1,4 @@
-<!-- views/listings.ejs - EJS template for the "Listings" page, which displays a list of all available listings in the system. Each listing shows its title, description, type, category, availability, zip code, and status. Users can click on a listing title to view its details. The page also includes navigation links to the home page, requests page, and user profile if the user is logged in. Additionally, there is a button to create a new listing. -->
+<!-- views/listings.ejs - This template renders the page for viewing all available listings. It includes filters for zip code, radius, category, and type. Each listing displays its title, description, type, category, availability, zip code, and status. Users can click on a listing title to view its details. The page also includes navigation links to the home page, requests page, and user profile if the user is logged in, as well as a button to create a new listing. -->
 
 <!DOCTYPE html>
 <html>
@@ -10,6 +10,8 @@
   <div class="page">
     <div class="topbar">
       <div class="brand">The Commons</div>
+
+      <!-- Navigation links for the top bar, buttons for home, requests, and profile if the user is logged in. -->
       <div class="nav-actions">
         <a class="btn secondary" href="/">Home</a>
         <a class="btn secondary" href="/requests">Requests</a>
@@ -25,6 +27,7 @@
       <a class="btn" href="/listings/create">Create New Listing</a>
     </div>
 
+    <!-- Filter section for refining the listings displayed based on zip code, radius, category, and type. -->
     <div class="card" style="margin-bottom: 20px;">
       <h2>Filters</h2>
 
@@ -83,6 +86,7 @@
       </form>
     </div>
 
+    <!-- Section displaying the list of listings based on the applied filters. Each listing is clickable and leads to its detail page. -->
     <div class="stack">
       <% listings.forEach(listing => { %>
         <div class="card-hover listing-clickable listing-card" data-link="/listings/<%= listing.listing_id %>">

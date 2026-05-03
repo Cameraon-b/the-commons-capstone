@@ -1,4 +1,5 @@
- <!-- views/profile.ejs - EJS template for the "Profile" page, which displays the user's profile information, community reputation, tools, and skills. Users can add, edit, or delete their tools and skills. The top navigation bar includes links to the home page, listings page, and requests page. -->
+ <!-- views/profile.ejs - This template renders the "Profile" page, which displays the user's profile information, community reputation, tools, and skills. Users can add, edit, or delete their tools and skills. The top navigation bar includes links to the home page, listings page, and requests page. -->
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,7 +11,8 @@
   <div class="page">
     <div class="topbar">
       <div class="brand">The Commons</div>
-
+      
+      <!-- Navigation links for the top bar, buttons for home, listings, and requests. -->
       <div class="nav-actions">
         <a class="btn secondary" href="/">Home</a>
         <a class="btn secondary" href="/listings">Return to Listings</a>
@@ -78,6 +80,7 @@
 
       <hr />
 
+      <!-- Section displaying recent reviews of exchanges with the user. If there are no reviews, a message is shown instead. -->
       <% if (reviews.length === 0) { %>
         <p class="meta">No reviews yet.</p>
       <% } else { %>
@@ -102,6 +105,7 @@
         <% } %>
       </div>
 
+      <!-- Section displaying the user's tools. If there are no tools, a message is shown instead. -->
       <% if (tools.length === 0) { %>
         <p class="meta">No tools added yet.</p>
       <% } else { %>
@@ -136,6 +140,7 @@
         <% } %>
       </div>
 
+      <!-- Section displaying the user's skills. If there are no skills, a message is shown instead. -->
       <% if (skills.length === 0) { %>
         <p class="meta">No skills added yet.</p>
       <% } else { %>
@@ -167,6 +172,7 @@
         <h3><%= isOwner ? 'Your Active Listings' : `${user.name}'s Active Listings` %></h3>
       </div>
 
+      <!-- Section displaying the user's active listings. If there are no active listings, a message is shown instead. -->
       <% if (listings.length === 0) { %>
         <p class="meta">No listings yet.</p>
       <% } else { %>
@@ -205,6 +211,7 @@
         <h3><%= isOwner ? 'Archived Listings' : `${user.name}'s Archived Listings` %></h3>
         <p class="meta">These listings are no longer available but are kept for exchange history.</p>
 
+        <!-- Section displaying the user's archived listings. If there are no archived listings, a message is shown instead. -->
         <div class="stack scroll-section">
           <% archivedListings.forEach(listing => { %>
             <div class="card" style="background:#f8f8f8;">

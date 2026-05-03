@@ -7,11 +7,13 @@ const bcrypt = require('bcrypt');
 const { getUserReviews, getUserReviewSummary } = require('../helpers/reviews');
 
 // GET /users/register
+// Renders the registration form for new users to create an account.
 router.get('/register', (req, res) => {
   res.render('register');
 });
 
 // POST /users/register
+// Handles the form submission for user registration. It takes the user information from the form, validates it (including checking for a valid zip code), hashes the password, and inserts the new user into the database. If the email is already registered or if there's any error during the process, it catches the error and renders a message page with an appropriate error message.
 router.post('/register', async (req, res) => {
   const { name, email, password, bio, zip_code, profile_image_url } = req.body;
 
@@ -58,11 +60,13 @@ router.post('/register', async (req, res) => {
 });
 
 // GET /users/login
+// Renders the login form for existing users to log in to their account.
 router.get('/login', (req, res) => {
   res.render('login');
 });
 
 // POST /users/login
+// Handles the form submission for user login. It takes the email and password from the form, checks if a user with that email exists, and if so, compares the provided password with the stored password hash. If the credentials are valid, it creates a session for the user and redirects to the homepage. If the credentials are invalid or if there's an error during the process, it catches the error and renders a message page with an appropriate error message.
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
@@ -110,6 +114,7 @@ router.post('/login', async (req, res) => {
 });
 
 // POST /users/logout
+// Handles user logout by destroying the user's session and redirecting to the homepage.
 router.post('/logout', (req, res) => {
   req.session.destroy(() => {
     res.redirect('/');
@@ -117,6 +122,7 @@ router.post('/logout', (req, res) => {
 });
 
 // GET /users
+// Renders a list of all users. If zip code and radius query parameters are provided, it filters the users to only show those within the specified radius of the given zip code.
 const zipcodes = require('zipcodes');
 
 router.get('/', async (req, res) => {
@@ -172,6 +178,7 @@ router.get('/', async (req, res) => {
 });
 
 // GET /users/:id/edit
+// Renders the form for editing a user's profile. Only accessible to the logged-in user who owns the profile.
 router.get('/:id/edit', async (req, res) => {
   if (!req.currentUserId) {
     return res.render('message', {
@@ -218,6 +225,7 @@ router.get('/:id/edit', async (req, res) => {
 });
 
 // POST /users/:id/edit
+// Handles the form submission for editing a user's profile. It takes the updated user information from the form, validates it (including checking for a valid zip code), and updates the user's profile in the database. Only the logged-in user who owns the profile can perform this action. If there's an error during the process, it catches the error and renders a message page with an appropriate error message.
 router.post('/:id/edit', async (req, res) => {
   if (!req.currentUserId) {
     return res.render('message', {
@@ -274,6 +282,7 @@ router.post('/:id/edit', async (req, res) => {
 });
 
 // GET /users/:id
+// Renders the profile page for a specific user. It retrieves the user's information, reviews, tools, skills, and listings from the database. If the user does not exist or if there's an error during the process, it catches the error and renders a message page with an appropriate error message.
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
 

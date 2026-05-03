@@ -1,4 +1,4 @@
-<!-- views/index.ejs - EJS template for the home page of The Commons, a platform for sharing tools and skills. The page includes a hero section with a welcome message and call-to-action buttons, a quote about commoning, and featured categories for browsing listings. It also conditionally displays navigation options based on whether the user is logged in or not. -->
+<!-- views/index.ejs - This template renders the home page of the application. It includes a hero section with a welcome message and call-to-action buttons, a quote, and a section showcasing featured categories and listings. The page also conditionally displays navigation links and user-specific actions based on whether the user is logged in or not. -->
 
 <!DOCTYPE html>
 <html>
@@ -10,7 +10,8 @@
   <div class="page">
     <div class="topbar">
       <div class="brand">The Commons</div>
-
+      
+      <!-- Navigation links for the top bar, buttons for home, listings, and profile. -->
       <div class="nav-actions">
         <% if (currentUserId) { %>
           <form action="/users/logout" method="POST" class="inline-form">
@@ -30,6 +31,7 @@
       </div>
     </div>
 
+    <!-- Hero section with welcome message and call-to-action buttons. -->
     <div class="card hero-card">
       <h1 class="hero-title">Sharing Tools. Sharing Skills.</h1>
       <p class="hero-subtitle">
@@ -47,6 +49,7 @@
       </div>
     </div>
 
+    <!-- If the user is logged in, show a personalized welcome message and quick links to their profile, requests, and inventory management. -->
     <% if (currentUserId) { %>
       <div class="card center-card home-section">
         <p class="meta welcome-text">Hello, <strong><%= currentUserName %></strong></p>
@@ -61,6 +64,7 @@
       </div>
     <% } %>
 
+    <!-- Quote section. -->
     <div class="card center-card home-section">
       <p class="quote">
         “There is no commons without commoning—the social practices and relationships of
@@ -68,6 +72,7 @@
       </p>
     </div>
 
+    <!-- Section showcasing featured categories with quick links to browse listings in those categories. -->
     <div class="card center-card home-section">
       <h2 class="section-subtitle">Featured Categories</h2>
 

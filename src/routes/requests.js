@@ -5,6 +5,7 @@ const router = express.Router();
 const pool = require('../config/db');
 
 // GET /requests
+// Renders the requests page for the logged-in user, showing incoming requests (requests from other users for the current user's listings), outgoing requests (requests made by the current user for other users' listings), and a history of past requests (both incoming and outgoing) that have been completed or declined. Only accessible to logged-in users.
 router.get('/', async (req, res) => {
   if (!req.currentUserId) {
     return res.render('message', {
@@ -15,6 +16,7 @@ router.get('/', async (req, res) => {
     });
   }
 
+  //loads all incoming and outgoing requests for the current user, including the relevant listing and user information to display in the requests page. It also separates the requests into different categories (pending/accepted vs. declined/completed) so they can be displayed in different sections on the page.
   try {
     const incomingResult = await pool.query(
       `
@@ -67,11 +69,14 @@ router.get('/', async (req, res) => {
       )
     ].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
+    // renders the requests page with the incoming, outgoing, and history requests passed in as variables. The template can then display these requests in separate sections and provide options to manage them (accept/decline for incoming requests, cancel for outgoing requests, etc.).
     res.render('requests', {
       incomingRequests,
       outgoingRequests,
       historyRequests
     });
+
+    // handle any errors that occur while loading requests and show a user-friendly error message instead of crashing the page
   } catch (err) {
     console.error(err);
     res.render('message', {
@@ -84,6 +89,7 @@ router.get('/', async (req, res) => {
 });
 
 // POST /requests/:id/accept
+// Allows the owner of a listing to accept a request from another user. Only the owner of the listing can accept a request for that listing. This route updates the status of the request to "accepted", updates the status of the listing to "in_use", and creates a notification for the requester to inform them that their request was accepted.
 router.post('/:id/accept', async (req, res) => {
   if (!req.currentUserId) {
     return res.render('message', {
@@ -96,6 +102,7 @@ router.post('/:id/accept', async (req, res) => {
 
   const { id } = req.params;
 
+  // We need to validate that the request exists and belongs to the current user before we can accept it. We also need to load the relevant listing information to include in the notification message for the requester. This ensures that users can only manage requests for their own listings and that notifications contain useful information about the accepted request.
   try {
     // Get request first
     const requestResult = await pool.query(
@@ -103,6 +110,7 @@ router.post('/:id/accept', async (req, res) => {
       [id, req.currentUserId]
     );
 
+    // If the request doesn't exist or doesn't belong to the user, show an error message instead of just crashing or doing nothing
     if (requestResult.rows.length === 0) {
       return res.render('message', {
         title: 'Request Not Found',
@@ -120,6 +128,7 @@ router.post('/:id/accept', async (req, res) => {
       [request.listing_id]
     );
 
+    // If the listing doesn't exist (which would be strange since the request exists, but we should still handle this case), show an error message instead of crashing
     if (listingResult.rows.length === 0) {
       return res.render('message', {
         title: 'Listing Not Found',
@@ -166,7 +175,9 @@ router.post('/:id/accept', async (req, res) => {
       ]
     );
 
+
     res.redirect('/requests');
+    // handle any errors that occur while accepting the request and show a user-friendly error message instead of crashing the page
   } catch (err) {
     console.error(err);
     res.render('message', {
@@ -179,6 +190,7 @@ router.post('/:id/accept', async (req, res) => {
 });
 
 // POST /requests/:id/decline
+// Allows the owner of a listing to decline a request from another user. Only the owner of the listing can decline a request for that listing. This route updates the status of the request to "declined" and creates a notification for the requester to inform them that their request was declined.
 router.post('/:id/decline', async (req, res) => {
   if (!req.currentUserId) {
     return res.render('message', {
@@ -191,6 +203,7 @@ router.post('/:id/decline', async (req, res) => {
 
   const { id } = req.params;
 
+  // We need to validate that the request exists and belongs to the current user before we can decline it. We also need to load the relevant listing information to include in the notification message for the requester. This ensures that users can only manage requests for their own listings and that notifications contain useful information about the declined request.
   try {
     // Get request first
     const requestResult = await pool.query(
@@ -198,6 +211,7 @@ router.post('/:id/decline', async (req, res) => {
       [id, req.currentUserId]
     );
 
+    // If the request doesn't exist or doesn't belong to the user, show an error message instead of just crashing or doing nothing
     if (requestResult.rows.length === 0) {
       return res.render('message', {
         title: 'Request Not Found',
@@ -215,6 +229,7 @@ router.post('/:id/decline', async (req, res) => {
       [request.listing_id]
     );
 
+    // If the listing doesn't exist (which would be strange since the request exists, but we should still handle this case), show an error message instead of crashing
     if (listingResult.rows.length === 0) {
       return res.render('message', {
         title: 'Listing Not Found',
@@ -251,6 +266,7 @@ router.post('/:id/decline', async (req, res) => {
       ]
     );
 
+    // handle any errors that occur while declining the request and show a user-friendly error message instead of crashing the page
     res.redirect('/requests');
   } catch (err) {
     console.error(err);
@@ -264,6 +280,7 @@ router.post('/:id/decline', async (req, res) => {
 });
 
 // POST /requests/:id/complete
+// Allows the owner of a listing to mark a request as completed once the exchange has taken place. Only the owner of the listing can mark a request for that listing as completed. This route updates the status of the request to "completed", updates the status of the listing back to "available", and creates a notification for the requester to inform them that their request was marked as completed.
 router.post('/:id/complete', async (req, res) => {
   if (!req.currentUserId) {
     return res.render('message', {
@@ -283,6 +300,7 @@ router.post('/:id/complete', async (req, res) => {
       [id, req.currentUserId]
     );
 
+    // If the request doesn't exist or doesn't belong to the user, show an error message instead of just crashing or doing nothing
     if (requestResult.rows.length === 0) {
       return res.render('message', {
         title: 'Request Not Found',
@@ -300,6 +318,7 @@ router.post('/:id/complete', async (req, res) => {
       [request.listing_id]
     );
 
+    // If the listing doesn't exist (which would be strange since the request exists, but we should still handle this case), show an error message instead of crashing
     if (listingResult.rows.length === 0) {
       return res.render('message', {
         title: 'Listing Not Found',
@@ -347,6 +366,7 @@ router.post('/:id/complete', async (req, res) => {
     );
 
     res.redirect('/requests');
+    // handle any errors that occur while completing the request and show a user-friendly error message instead of crashing the page
   } catch (err) {
     console.error(err);
     res.render('message', {

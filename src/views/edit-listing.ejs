@@ -1,4 +1,4 @@
-<!-- views/edit-listing.ejs - EJS template for the "Edit Listing" page, allowing users to edit an existing listing. The page includes a form pre-populated with the current listing details, allowing users to update the title, description, category, availability, zip code, and status of the listing. It also provides navigation links to the home page, listings page, and user profile. -->
+<!-- views/edit-listing.ejs - This template renders the page for editing an existing listing. The form is pre-populated with the current listing details, allowing users to update the title, description, category, availability, zip code, status, and image URL. The page also includes -->
 
 <!DOCTYPE html>
 </html>
@@ -11,6 +11,7 @@
     <div class="topbar">
       <div class="brand">The Commons</div>
 
+      <!-- Navigation links for the top bar, buttons for home, listings, and profile. -->
       <div class="nav-actions">
         <a class="btn secondary" href="/">Home</a>
         <a class="btn secondary" href="/listings">Listings</a>
@@ -18,8 +19,10 @@
       </div>
     </div>
 
+    <!-- Section title for the page. -->
     <h1 class="section-title">Edit Listing</h1>
 
+    <!-- Form for editing an existing listing. -->
     <div class="card">
       <form action="/listings/<%= listing.listing_id %>/edit" method="POST" class="stack">
         <div class="form-group">

@@ -1,5 +1,5 @@
 // Middleware to attach the count of unread notifications to res.locals for use in templates
-
+// This middleware checks if the user is logged in and, if so, queries the database to count how many unread notifications they have. It then attaches this count to res.locals.notificationCount so that it can be easily accessed in any template without needing to query the database again.
 const pool = require('../config/db');
 
 async function attachNotificationCount(req, res, next) {

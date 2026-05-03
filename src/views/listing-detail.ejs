@@ -1,4 +1,4 @@
-<!-- views/listing-detail.ejs - EJS template for the "Listing Detail" page, which displays the details of a specific listing and includes a form for users to request the listing. The page shows information such as the title, description, type, category, availability, zip code, status, and creation date of the listing. The request form allows users to send a message and specify their preferred contact method and contact information. The page also includes a link to go back to the listings page. -->
+<!-- views/listing-detail.ejs - This template renders the page for viewing the details of a specific listing. It includes information such as the title, description, type, category, availability, zip code, status, and creation date of the listing. The page also displays recent reviews of exchanges with the listing owner and provides a form for users to request the listing if it is available. -->
 
 <!DOCTYPE html>
 <html>
@@ -11,6 +11,7 @@
     <div class="topbar">
       <div class="brand">The Commons</div>
 
+      <!-- Navigation links for the top bar, buttons for home, return to listings, and profile if the user is logged in. -->
       <div class="nav-actions">
         <a class="btn secondary" href="/">Home</a>
         <a class="btn secondary" href="/listings">Return to Listings</a>
@@ -24,6 +25,7 @@
 
       <h1 class="section-title"><%= listing.title %></h1>
 
+      <!-- Section displaying the listing details, including meta information on the left and an image on the right if available. -->
       <div class="listing-detail-content">
 
         <!-- LEFT: META INFO -->

@@ -1,4 +1,4 @@
-<!-- views/create-skill.ejs - EJS template for the "Add Skill" page, allowing users to add a new skill to their profile. The page includes a form for entering skill details such as name, category, and description. It also provides navigation links to the home page, listings page, and user profile. -->
+<!-- views/create-skill.ejs - This template renders the page for adding a new skill to the user's inventory. The form includes fields for skill name, category, and description. The page also includes navigation links to the home page, listings page, and user profile. -->
 
 <!DOCTYPE html>
 <html>
@@ -11,6 +11,7 @@
     <div class="topbar">
       <div class="brand">The Commons</div>
 
+      <!-- Navigation links for the top bar, buttons for home, listings, and profile. -->
       <div class="nav-actions">
         <a class="btn secondary" href="/">Home</a>
         <a class="btn secondary" href="/listings">Listings</a>
@@ -18,8 +19,10 @@
       </div>
     </div>
 
+    <!-- Section title for the page. -->
     <h1 class="section-title">Add Skill</h1>
 
+    <!-- Form for adding a new skill to the user's inventory. -->
     <div class="card">
       <form action="/skills" method="POST" class="stack">
         <div class="form-group">

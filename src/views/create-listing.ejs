@@ -1,4 +1,4 @@
-<!-- views/create-listing.ejs - EJS template for the "Create Listing" page, allowing users to create a new listing based on their existing tools or skills. The page includes a form for entering listing details such as title, description, category, availability, and zip code. It also provides navigation links to the home page, listings page, and user profile. -->
+<!-- views/create-listing.ejs - This template renders the page for creating a new listing. It allows users to select an existing tool or skill from their inventory or create a new listing from scratch. The form includes fields for title, description, category, availability, zip code, and an optional image URL. The page also includes navigation links to the home page, listings page, and user profile. -->
 
 <!DOCTYPE html>
 <html>
@@ -11,6 +11,7 @@
     <div class="topbar">
       <div class="brand">The Commons</div>
 
+      <!-- Navigation links for the top bar, buttons for home, listings, and profile. -->
       <div class="nav-actions">
         <a class="btn secondary" href="/">Home</a>
         <a class="btn secondary" href="/listings">Back to Listings</a>
@@ -18,12 +19,15 @@
       </div>
     </div>
 
+    <!-- Section title for the page. -->
     <h1 class="section-title">Create Listing</h1>
 
+    <!-- If the user has not selected a tool or skill yet, show the inventory selection card. -->
     <% if (!toolId && !skillId) { %>
       <div class="card" style="margin-bottom: 20px;">
         <h3>Select from Your Inventory</h3>
 
+        <!-- If the user has no tools or skills, show a message and a link to their profile. Otherwise, show a form to select an item from their inventory. -->
         <% if (tools.length === 0 && skills.length === 0) { %>
           <p class="meta">You do not have any tools or skills in your inventory yet.</p>
           <p>
@@ -56,6 +60,7 @@
       </div>
     <% } %>
 
+    <!-- If the user has selected a tool or skill, show the listing creation form with pre-filled information based on the selected item. -->
     <% if (toolId || skillId) { %>
       <div class="card">
         <p class="meta">
@@ -64,6 +69,7 @@
           <%= selectedItem.name %>
         </p>
 
+        <!-- Listing creation form with pre-filled information based on the selected item. -->
         <form action="/listings" method="POST" class="stack">
           <input type="hidden" name="type" value="<%= selectedType %>">
 

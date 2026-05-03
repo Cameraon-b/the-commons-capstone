@@ -1,13 +1,6 @@
 /* styles.css - This file contains the CSS styles for the web application. It defines the overall look and feel of the site, including layout, typography, colors, and responsive design. The styles are organized into classes that can be applied to HTML elements in the EJS templates to ensure a consistent and visually appealing user interface across all pages of the application. */
 
-@import url('https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=System-ui&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Proxima+Nova:wght@400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
-
 
 * {
   box-sizing: border-box;

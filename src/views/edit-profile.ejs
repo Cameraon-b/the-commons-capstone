@@ -1,3 +1,5 @@
+<!-- views/edit-profile.ejs - This template renders the page for editing a user's profile. The form is pre-populated with the current user details, allowing users to update their name, bio, zip code, and profile image URL. -->
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,15 +11,18 @@
     <div class="topbar">
       <div class="brand">The Commons</div>
 
+      <!-- Navigation links for the top bar, buttons for home and back to profile. -->
       <div class="nav-actions">
         <a class="btn secondary" href="/">Home</a>
         <a class="btn secondary" href="/users/<%= user.user_id %>">Back to Profile</a>
       </div>
     </div>
 
+    
     <div class="card">
       <h1 class="section-title">Edit Profile</h1>
 
+      <!-- Form for editing the user's profile, pre-populated with current user details. -->
       <form action="/users/<%= user.user_id %>/edit" method="POST" class="stack">
         <div class="form-group">
           <label for="name">Name</label>

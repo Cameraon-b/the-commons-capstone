@@ -5,6 +5,7 @@ const router = express.Router();
 const pool = require('../config/db');
 
 // GET /skills/new
+// Renders the form for adding a new skill. Only accessible to logged-in users.
 router.get('/new', (req, res) => {
   if (!req.currentUserId) {
     return res.render('message', {
@@ -21,6 +22,7 @@ router.get('/new', (req, res) => {
 });
 
 // POST /skills
+// Handles the form submission for adding a new skill. It first checks if the user is logged in, then it takes the skill information from the form and inserts it into the database. If the insertion is successful, it redirects back to the user's profile page. If there's an error during the database operation, it catches the error and renders a message page with an error message.
 router.post('/', async (req, res) => {
   if (!req.currentUserId) {
     return res.render('message', {
@@ -53,6 +55,7 @@ router.post('/', async (req, res) => {
 });
 
 // POST /skills/:id/delete
+// Handles the deletion of a skill. It first checks if the user is logged in, then it verifies that the skill exists and belongs to the current user. If the checks pass, it deletes the skill from the database. If there's an error during the database operation, it catches the error and renders a message page with an error message.
 router.post('/:id/delete', async (req, res) => {
   if (!req.currentUserId) {
     return res.render('message', {
